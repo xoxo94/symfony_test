@@ -1,0 +1,93 @@
+var OpenTradingObj={
+    param:{},
+    setUsername:function(v){
+        if(v!=undefined && v.length>0){
+            OpenTradingObj.param.username=v;
+        }else{
+            delete OpenTradingObj.param['username'];
+        }
+    },
+    setSymbol:function(v){
+        if(v!=undefined && v.length>0){
+            OpenTradingObj.param.symbol=v;
+        }else{
+            delete OpenTradingObj.param['symbol'];
+        }
+    },
+    setOpentimeBegin:function(v){
+        if(v!=undefined && v.length>0){
+            OpenTradingObj.param.opentimeBegin=v;
+        }else{
+            delete OpenTradingObj.param['opentimeBegin'];
+        }
+    },
+    setOpentimeEnd:function(v){
+        if(v!=undefined && v.length>0){
+            OpenTradingObj.param.opentimeEnd=v;
+        }else{
+            delete OpenTradingObj.param['opentimeEnd'];
+        }
+    },
+    formatDate:function(dt) {
+        var t= dt.slice(6, 19);
+        var tdt=new Date(t);
+        var year = tdt.getFullYear();
+        var month = tdt.getMonth() + 1;
+        var date = tdt.getDate();
+        var hour = tdt.getHours();
+        var minute = tdt.getMinutes();
+        var second = tdt.getSeconds();
+        return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+    },searchSubmit:function(){
+        var index=layer.load(0,{shade: [0.3,'#000']});
+        $.ajax({
+            url : '/mt4/records/open/trading',
+            type : "post",
+            data : OpenTradingObj.param,
+            dataType:'json',//数据类型
+            success:function(data){
+                layer.close(index);
+                if(data.code){
+                    $('.totalVolume').html('$'+(data.data.totalVolume*0.01).toFixed(2));
+                    $('.totalProfit').html('$'+data.data.totalProfit.toFixed(2));
+                    $('.totalCommission').html('$'+data.data.totalCommission.toFixed(2));
+                    $('.totalBalance').html('$'+data.data.totalBalance.toFixed(2));
+                    $('.totalEquity').html('$'+data.data.totalEquity.toFixed(2));
+                    $('.totalMarginFree').html('$'+data.data.totalMarginFree.toFixed(2));
+                    $('.totalStorage').html('$'+data.data.totalStorage.toFixed(2));
+                    var htmlStr='';
+                    if(data.data.totalgoldentry>0){
+                        for(var item in data.data.plant){
+                            var result=data.data.plant[item];
+                            if(result.opentrading!=null && result.opentrading!=undefined){
+                                result.opentrading.forEach(function(order){
+                                    htmlStr+='<tr><td>'+result.login
+                                        +'</td><td>'+result.userInfo
+                                        +'</td><td>'+result.agentInfo
+                                        +'</td><td>'+order.OrderId
+                                        +'</td><td>'+(order.Cmd==1?'{{ '卖空' | ctrans }}':'{{ '买入' | ctrans }}')+'['+order.Symbol+']'
+                                        +'</td><td>'+(order.Volume*0.01).toFixed(2)
+                                        +'</td><td>'+order.OpenPrice+'<br/>['+order.OpenTime+']'
+                                        +'</td><td>'+order.ClosePrice
+                                        +'</td><td>'+(isNaN(order.StopLoss)?0:parseFloat(order.StopLoss).toFixed(5))+'|'+(isNaN(order.TakeProfit)?0:parseFloat(order.TakeProfit).toFixed(5))
+                                        +'</td><td>'+(isNaN(order.Profit)?0:parseFloat(order.Profit).toFixed(2))
+                                        +'</td><td>'+(isNaN(order.Commission)?0:parseFloat(order.Commission).toFixed(2))
+                                        +'</td><td>'+(isNaN(order.Storage)?0:parseFloat(order.Storage).toFixed(2))
+                                        +'</td><td>'+(isNaN(result.balance)?0:parseFloat(result.balance).toFixed(2))
+                                        +'</td><td>'+(isNaN(result.equity)?0:parseFloat(result.equity).toFixed(2))
+                                        +'</td><td>'+(isNaN(result.marginFree)?0:parseFloat(result.marginFree).toFixed(2))
+                                        +'</td><td>'+(isNaN(result.marginLevel)?0:parseFloat(result.marginLevel).toFixed(2))+'%</td></tr>';
+                                });
+                            }
+                        }
+                    }else{
+                        htmlStr='<tr><td colspan="9"><p style="text-align:center;">{{ '无持仓记录.' | ctrans }}</p></td></tr>';
+                    }
+                    $('#opentradingdata tbody').html(htmlStr);
+                }
+            },error:function(){
+                layer.close(index);
+            }
+        });
+    }
+};

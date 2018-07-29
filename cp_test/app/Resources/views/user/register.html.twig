@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="{{ asset("public/css/register.css") }}">
+    <script src="{{ asset("public/ccount/js/jquery-1.11.1.min.js") }}"></script>
+    <script src="{{ asset("public/js/register.js") }}"></script>
+</head>
+
+<body>{{ '
+    <div class="st-tabs">
+        <ul>
+            <li class="on"><i>{{ '填写个人资料' | ctrans }}</i></li>
+            <li><i>{{ '开户资料' | ctrans }}</i></li>
+            <li><i>{{ '阅读并接受协议' | ctrans }}</i></li>
+            <li class="last"><i>{{ '检阅并递交' | ctrans }}</i></li>
+        </ul>
+    </div>
+    <div class="st-cont">
+        <div class="tab" style="display: block;">
+            <table class="table" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="st-title" colspan="4">A. {{ '个人资料' | ctrans }}</td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '客户姓名' | ctrans }}</td>
+                    <td colspan="3">
+                        <div class="label fl w1 mr10">
+                            <input class="w1" type="text">
+                            <label for="male">{{ '姓(英文)' | ctrans }}</label>
+                        </div>
+                        <div class="label fl w2 mr10">
+                            <input class="w2" type="text">
+                            <label for="male">{{ '名字(英文)' | ctrans }}</label>
+                        </div>
+                        <div class="label fl w1 mr10">
+                            <input class="w1" type="text">
+                            <label for="male">{{ '姓(中文)' | ctrans }}</label>
+                        </div>
+                        <div class="label fl w2 mr20">
+                            <input class="w2" type="text">
+                            <label for="male">{{ '名字(中文)' | ctrans }}</label>
+                        </div>
+                        <input name="Fruit" class="fl m0" type="radio" />
+                        <label class="sex fl" for="male">{{ '先生' | ctrans }}</label>
+                        <input name="Fruit" class="fl m0" type="radio" />
+                        <label class="sex fl" for="male2">{{ '女士' | ctrans }}</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '联系地址' | ctrans }}</td>
+                    <td colspan="3">
+                        <div class="mb12">
+                            <select class="w3 fl mr10" name="" id="">
+                                <option value="选择国籍">{{ '请选择交易账号' | ctrans }}</option>
+                                <option value="选择国籍2">{{ '请选择交易账号2' | ctrans }}</option>
+                                <option value="选择国籍3">{{ '请选择交易账号3' | ctrans }}</option>
+                            </select>
+                            <select class="w3 fl" name="" id="">
+                                <option value="选择居住的国家">{{ '请选择交易账号' | ctrans }}</option>
+                                <option value="选择居住的国家2">{{ '请选择交易账号2' | ctrans }}</option>
+                                <option value="选择居住的国家3">{{ '请选择交易账号3' | ctrans }}</option>
+                            </select>
+                        </div>
+                        <div class="mb12">
+                            <input class="w3 fl mr10" type="text" placeholder="{{ '所属直辖市/省份' | ctrans }}">
+                            <input class="w3 fl" type="text" placeholder="{{ '所属城市' | ctrans }}">
+                        </div>
+                        <input class="w3 fl" type="text" placeholder="{{ '您的详细地址' | ctrans }}">
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '出生年月' | ctrans }}</td>
+                    <td colspan="3">
+                        <input class="w6" type="text" placeholder="{{ '您出生年月' | ctrans }}" style="width: 448px;margin-right: 10px;" >
+                        <input class="w6" type="text" placeholder="{{ '您的证件号码' | ctrans }}" style="width: 448px">
+                    </td>
+                </tr>
+            </table>
+            <table class="table " border="0" cellpadding="0" cellspacing="0">
+                <tr class="notice">
+                    <td class="st-title" colspan="4">B.{{ '联络资料' | ctrans }}</td>
+                </tr>
+                <tr class="notice">
+                    <td class="name">{{ '电子邮箱' | ctrans }}</td>
+                    <td colspan="3">
+                        <input class="w7 fl mr20" type="text" placeholder="您的电子邮箱' | ctrans }}" />
+                        <input class="fl m0" type="checkbox" />
+                        <label class="sex" for="male">{{ '订阅最新咨讯' | ctrans }}</label>
+                    </td>
+                </tr>
+                <tr class="notice">
+                    <td class="name">{{ '联系电话' | ctrans }}</td>
+                    <td colspan="3">
+                        <input class="w8" type="text" placeholder="{{ '国家代码' | ctrans }}" />&nbsp;&nbsp;-&nbsp;&nbsp;
+                        <input class="w8" type="text" placeholder="{{ '手机号码' | ctrans }}" />
+                    </td>
+                </tr>
+            </table>
+            <table class="table " border="0" cellpadding="0" cellspacing="0">
+                <tr class="notice">
+                    <td class="st-title" colspan="4">C.{{ '证件上传' | ctrans }}</td>
+                </tr>
+                <tr class="notice">
+                    <td class="name">{{ '身份证正面上传' | ctrans }}</td>
+                    <td colspan="3">
+                        <input class="w7 fl" type="text" placeholder="" />
+                        <button class="uploadCert fl" type="button">{{ '上传凭证' | ctrans }}</button>
+                    </td>
+                </tr>
+                <tr class="notice">
+                    <td class="name">{{ '身份证反面上传' | ctrans }}</td>
+                    <td colspan="3">
+
+                        <input class="w7 fl" type="text" placeholder="" />
+                        <button class="uploadCert fl" type="button">{{ '上传凭证' | ctrans }}</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="tac"><button type="button" class="btn submit st-btn">{{ '提交' | ctrans }}</button></td>
+                </tr>
+            </table>
+        </div>
+        <div class="tab" style="display: none;">
+            <table class="table" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td colspan="4" class="st-title">D. {{ '账户性质' | ctrans }}</td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '账户类型' | ctrans }}</td>
+                    <td colspan="3">
+                        <select class="w9 fl mr10" name="" id="">
+                                <option value="{{ '请选择账户类型' | ctrans }}">1</option>
+                                <option value="{{ '请选择账户类型' | ctrans }}">2</option>
+                                <option value="{{ '请选择账户类型' | ctrans }}">3</option>
+                            </select>
+
+                        <select class="w9 fl" name="" id="">
+                                <option value="{{ '请选择杠杆比例' | ctrans }}">1</option>
+                                <option value="{{ '请选择杠杆比例' | ctrans }}">2</option>
+                                <option value="{{ '请选择杠杆比例' | ctrans }}">3</option>
+                            </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '登录密码' | ctrans }}</td>
+                    <td colspan="3">
+                        <div class="label fl w10 mr10">
+                            <input class="w10" type="text">
+                            <label for="male">{{ '登录密码不能全为数字并长度不能小于8' | ctrans }}</label>
+                        </div>
+                        <div class="label fl w10">
+                            <input class="w10" type="text">
+                            <label for="male">{{ '重新输入密码，两次密码必须一致' | ctrans }}</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '账户类型' | ctrans }}</td>
+                    <td colspan="3">
+                        <select class="w9 fl" name="" id="">
+                                <option value="{{ '请选择个人经理' | ctrans }}">1</option>
+                                <option value="{{ '请选择个人经理' | ctrans }}">2</option>
+                                <option value="{{ '请选择个人经理' | ctrans }}">3</option>
+                            </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '代理信息' | ctrans }}</td>
+                    <td colspan="3">
+                        <input class="w10" type="text" placeholder="{{ '代理IB代码' | ctrans }}">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                    <span class="span">{{ '相关协议' | ctrans }}</span>
+                    <a href="{{ asset('public/document/PRIVACY POLICY.pdf') }}" target="_blank" class="red" style="font-weight:800;">
+                            <img src="{{ asset('public/images/pdf.png') }}">PRIVACY LAW</a>
+                        <br/>
+                        <input class="fl m0" style="margin-left:80px;" type="checkbox" />
+                        <label class="sex fl" for="male">{{ '本人已详细阅读以上协议，理解并同意该业务及声明之条款' | ctrans }}</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align: center">
+                        <button type="button" class="st-btn btn tar back back1">{{ '返回上一步' | ctrans }}</button>
+                        <button type="button" class="st-btn tar sure sure1">{{ '继续，进入下一步' | ctrans }}</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="tab" style="display: none;">
+            <table class="table" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td colspan="4" class="st-title">A. {{ '个人资料' | ctrans }}</td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '您的姓名' | ctrans }}</td>
+                    <td class="w3"><input class="w3" type="text"></td>
+                    <td class="name w11 p0">{{ '出生日期' | ctrans }}</td>
+                    <td colspan="2"><input class="w3" type="text"></td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '直辖市/省份' | ctrans }}</td>
+                    <td class="w3"><input class="w3" type="text"></td>
+                    <td class="name w11 p0">{{ '城市' | ctrans }}</td>
+                    <td colspan="2"><input class="w3" type="text"></td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '详细地址' | ctrans }}</td>
+                    <td class="w1" colspan="4"><input class="w12" type="text"></td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '证件号码' | ctrans }}</td>
+                    <td class="w1" colspan="4"><input class="w12" type="text"></td>
+                </tr>
+            </table>
+            <table class="table" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td colspan="4" class="st-title">B.{{ '联络资料' | ctrans }}</td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '手机' | ctrans }}</td>
+                    <td class="w3"><input class="w3" type="text"></td>
+                    <td class="name w11 p0">{{ '电子邮箱' | ctrans }}</td>
+                    <td colspan="2"><input class="w3" type="text"></td>
+                </tr>
+            </table>
+            <table class="table" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td colspan="4" class="st-title">C.{{ '账户信息' | ctrans }}</td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '账户类型' | ctrans }}</td>
+                    <td class="w3"><input class="w3" type="text"></td>
+                    <td class="name w11 p0">{{ '杠杆比例' | ctrans }}</td>
+                    <td colspan="2"><input class="w3" type="text"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: right">
+                        <div class="yzm">
+                            <p class="fl">{{ '验证码：' | ctrans }}</p>
+                            <img src="{{asset('/captcha/window')}}" onclick="this.src='/captcha/window?b='+Math.random();" class="mr10" alt="">
+                            <input type="text" class="w5 fl">
+                        </div>
+                    </td>
+                    <td colspan="2" style="text-align: left">
+                        <button type="button" class="st-btn btn tar back back2">{{ '返回上一步' | ctrans }}</button>
+                        <button type="button" class="st-btn tar sure sure2">{{ '确认无误现在申请' | ctrans }}</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="tab" style="display: none;">
+            <div class="succ">{{ '恭喜您！资料已提交成功' | ctrans }}</div>
+            <h2 class="st-title2">{{ '以下是您本次提交的资料：' | ctrans }}</h2>
+            <table class="table" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td colspan="4" class="st-title">A. {{ '个人资料' | ctrans }}</td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '您的姓名' | ctrans }}</td>
+                    <td class="w3"><input class="w3" type="text"></td>
+                    <td class="name w11 p0">{{ '出生日期' | ctrans }}</td>
+                    <td colspan="2"><input class="w3" type="text"></td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '直辖市/省份' | ctrans }}</td>
+                    <td class="w3"><input class="w3" type="text"></td>
+                    <td class="name w11 p0">{{ '城市' | ctrans }}</td>
+                    <td colspan="2"><input class="w3" type="text"></td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '详细地址' | ctrans }}</td>
+                    <td class="w1" colspan="4"><input class="w12" type="text"></td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '证件号码' | ctrans }}</td>
+                    <td class="w1" colspan="4"><input class="w12" type="text"></td>
+                </tr>
+            </table>
+            <table class="table" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td colspan="4" class="st-title">B.{{ '联络资料' | ctrans }}</td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '手机' | ctrans }}</td>
+                    <td class="w3"><input class="w3" type="text"></td>
+                    <td class="name w11 p0">{{ '电子邮箱' | ctrans }}</td>
+                    <td colspan="2"><input class="w3" type="text"></td>
+                </tr>
+            </table>
+            <table class="table" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td colspan="4" class="st-title">C.{{ '账户信息' | ctrans }}</td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '账户类型' | ctrans }}</td>
+                    <td class="w3"><input class="w3" type="text"></td>
+                    <td class="name w11 p0">{{ '杠杆比例' | ctrans }}</td>
+                    <td colspan="2"><input class="w3" type="text"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+</html>

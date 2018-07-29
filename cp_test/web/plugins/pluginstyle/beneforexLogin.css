@@ -1,0 +1,17 @@
+.login{background: #f5f5f5;}
+.login .topbar2 {   background-color: white !important;  width: 100% !important;  border-bottom: 4px solid #c6c6c6;height: 100px !important; }
+.login .topbar2 .home { right: 18% !important;   }
+.login .topbar2 .logo { left: 20% !important;   }
+#pluginslang {  right: 20% !important; position:fixed !important;  }
+.am-form{ margin: 50px auto !important;}
+.login .from-login{box-shadow:none;}
+.login .from-login .username, .login .from-login .password, .login .from-login .vcode {  margin-left: 15px;  }
+.login .from-login .img {  margin-top: 10px;  margin-left: 15px;}
+.login .from-login {  border-radius: 10px; background-color: #ffffff;  }
+.login .from-login td {  text-align: center;  font-size: 16px;  color: #666;  }
+#forgetform .forgettable div.username, #forgetform .forgettable div.vcode_input, #forgetform .forgettable div.vcode_img {  width: 90%;  margin-left: 15px;  }
+#forgetform .forgettable div.vcode_img img {  margin-right:22px;  }
+#pluginslang .language_div {  background: url("../../public/ccount/images/font.png") right no-repeat !important;  }
+.login .from-login button.btn-login{background-color: #ebc321;}
+.login .from-login button.btn-login:hover{background-color: #d9b41f;}
+.login .from-login button.btn-login:active{background-color: #c7a51d;}

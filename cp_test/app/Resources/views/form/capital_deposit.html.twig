@@ -1,0 +1,136 @@
+{% extends 'form/layout.html.twig' %}
+{% block content %}
+    {% if not attribute(data.MODULE,"system_not_write") is defined or data.MODULE.system_write!='1'%}
+        <form action="{{ asset('/capital/deposit/submit') }}" method="post" onsubmit="formInit.submit(this);return false;">
+            <div class="st-tabs">
+                <ul>
+                    <li class="on"><i>{{ '填写个人资料与入款信息' | ctrans }}</i></li>
+                    <li><i>{{ '检阅并递交' | ctrans }}</i></li>
+                    <li class="last"><i>{{ '完成' | ctrans }}</i></li>
+                </ul>
+            </div>
+
+            <div class="st-cont">
+                <div class="tab" style="display: block;">
+                    <table class="table" cellpadding="0"  cellspacing="0">
+                        <tr><td class="st-title" colspan="4">A. {{ '账户信息-联络资料' | ctrans }}</td></tr>
+                        <input name="nickname"  class="w1 empty"  type="hidden" value="{{ data.nickname }}"/>
+                        <tr>
+							<td class="name">{{ '账户' | ctrans }}</td>
+							<td class="input" colspan="3"><input name="username" class="w3 empty" type="text" value="{{ data.username }}"></td>
+						</tr>
+                        <tr>
+							<td class="name">{{ '入金方式' | ctrans }}</td>
+                            <td class="input" colspan="3">
+								<div class="count-type" id="">
+                                    <select name="intoMethod" class="w3 fl mr10 empty" onchange="formInit.selectIntoMethodChange(this);">
+                                        {#{% if data.WEB.cash_wallet_enable=='1' %}#}
+                                        {#<option value="0">{{ '储蓄账号' | ctrans }}</option>#}
+                                        {#{% endif %}#}
+                                        <option value="1">{{ '交易账号' | ctrans }}</option>
+                                        {#<option value="4">{{ '佣金账号' | ctrans }}</option>#}
+                                    </select>
+                                    <select name="mt4no" id="tradlist" class="w3 fl empty"  name="outMethod">
+                                        {% if  not data.mt4nos.tradlist is defined or data.mt4nos.tradlist==[] %}
+                                            <option id="tradlist" value="">{{ '没有可选账号' | ctrans }}</option>
+
+                                            {% else %}
+
+                                                {% for item in data.mt4nos.tradlist%}
+                                                    <option id="tradlist" value="{{ item.uklogin }}">{{ item.login }}</option>
+                                                {% endfor %}
+                                        {% endif %}
+
+
+                                    </select>
+                                    {#<select name="" id="commission" class="w3 fl " style="display: none" name="outMethod">#}
+                                    {#{% for item in data.mt4nos.commission%}#}
+                                        {#<option  value="{{ item.uklogin }}">{{ item.login }}</option>#}
+                                    {#{% endfor %}#}
+                                    {#</select>#}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  class="name">{{ '手机号码' | ctrans }}</td>
+                            <td  class="input" colspan="3"><input name="mobile" class="w3 empty" type="text" value="{{ data.mobile }}"></td>
+						</tr>
+						<tr>
+                            <td  class="name">{{ '邮箱地址' | ctrans }}</td>
+                            <td  class="input" colspan="3"><input name="email" class="w3 empty" type="text" value="{{ data.email }}"></td>
+                        </tr>
+                    </table>
+                    <table class="table" cellpadding="0" cellspacing="0" id="tables">
+                        <tr class="notice">
+                            <td class="st-title" colspan="4">B. {{ '入金信息' | ctrans }}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="name">{{ '入金金额' | ctrans }}</td>
+
+                            <td class="input" colspan="3"><input name="amount" class="w3 mr10 empty amount fl" type="text" onkeyup="formInit.currencyexa(this)" /><div class="w3 remark fl"><span class="exa"></span></div></td>
+
+
+
+                        </tr>
+                        <tr class="notice">
+                            <td class="name">{{ '入金信息' | ctrans }}</td>
+                            <td class="input" colspan="3">
+                                <div class="label fl w3 mr10">
+                                    <input name="orderno" class="w1 empty" type="text" id="" /><label for="male3">{{ '填写付款银行凭证号' | ctrans }}</label>
+                                </div>
+                                <div class="label fl w3">
+                                    <input name="bank"  class="w1 empty" type="text" id="" /><label for="male4">{{ '填写付款银行' | ctrans }}</label>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="notice ficate">
+                            <td class="name">{{ '上传凭证' | ctrans }}</td>
+                            <td class="input" colspan="3">
+                                <input name="voucher" readonly class="w7 fl empty" type="text" placeholder="" />
+                                <input type="file" style="position: relative" onchange="formInit.upload(this);" class="uploadCert fl" accept="image/gif, image/jpg,image/jpeg, image/bmp, image/png" capture="camera" name="file" />
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="table" >
+                        <tr><td colspan="4" class="tac" style="text-align: center"><button type="button" onclick="formInit.next(this);" id="outbtn" class="btn submit st-btn goldenbtn">{{ '下一步' | ctrans }}</button></td></tr>
+                    </table>
+                </div>
+                <div class="tab" style="display: none;">
+                    <table class="table" cellpadding="0" cellspacing="0">
+                    </table>
+                    <table class="table" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td colspan="2" style="text-align: right">
+                                <div class="yzm">
+                                    <p class="fl">{{ '验证码' | ctrans }}：</p>
+                                    <img id="checkcode" src="{{ asset('/captcha/window') }}" onClick="this.src='/captcha/window?a='+Math.random();"  class="mr10" alt="" style="height:48px">
+                                    <input type="text" name="vcode" class="w5 fl empty">
+                                </div>
+                            </td>
+                            <td  colspan="2" style="text-align: left">
+                                <div id="conceal">
+                                    <button type="button" onclick="formInit.back(this);" class="st-btn btn tar back">{{ '返回上一步' | ctrans }}</button>
+                                    <button type="submit" id="submitno" class="st-btn sure submit">{{ '确认无误现在申请' | ctrans }}</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab" style="display: none;">
+
+                </div>
+            </div>
+        </form>
+    {% else %}
+        <div style='padding:100px;height:150px;'><p style='text-align:center;color:{{ attribute(data.MODULE,"MainColor") is defined ? data.MODULE.MainColor:0 }};font-size:14px;'>{{ '目前网站正在维护，暂不支持该操作。' | ctrans }}</p></div>
+    {% endif %}
+
+{% endblock %}
+{% block initScripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('/public/ccount/js/layer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/capital/deposit.js') }}"></script>
+{% endblock %}

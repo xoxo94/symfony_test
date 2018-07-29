@@ -1,0 +1,548 @@
+$(function () {
+    $(".layy .lay-box .partner .ulli li").click(function(){
+        $(this).addClass("on");
+        $(this).siblings().removeClass("on");
+    });
+    /**
+     * 生成推广连接
+     */
+    $("#pbtn").click(function () {
+        var index = layer.load(0, {shade: [0.3,'#000']}); //0代表加载的风格，支持0-2
+        var usertype=$('select[name=usertype]').val();
+        $.ajax({
+            url: "/create/curl",
+            type:"POST",
+            dataType:"json",
+            data:"usertype="+usertype,
+            success: function(obj){
+                layer.close(index);
+                if(obj.code==false){
+                    layer.alert(obj.msg,{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]})
+                }else {
+                    var value = $('#buildapath').val()+obj.link //链接赋值
+                    layer.confirm(
+                       '<div id="qrcode"></div>' +//二维码显示div
+                        '<textarea rows="" cols="" id="url" style="overflow-x:hidden;height: 70px" readonly>'+value+'</textarea>',//显示链接textarea
+                        {
+                    title:'{{ '推广链接' | ctrans }}',
+                    skin: 'layer-ext-moon',
+                    overflow: false,
+                    fix:false,
+                    area: ['300px', '330px'],
+                    resize:false,
+                    btn:['{{ '复制链接' | ctrans }}','{{ '取消' | ctrans }}']
+                    },function(){
+                            url.select();
+                            document.execCommand('Copy');//复制链接逻辑代码
+                            layer.msg('{{ '链接已复制' | ctrans }}', {icon: 6});
+                        }
+                    )
+                }
+                $('#qrcode').qrcode(value);//生成二维码代码
+            },
+            error:function () {
+                layer.close(index);
+                layer.alert("{{ '请求错误' | ctrans }}",{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]})
+            }
+        });
+    });
+
+
+
+
+
+
+    /**
+     * 奖励 查询
+     */
+    $(".searchaward").click(function () {
+        var index = layer.load(0, {shade: [0.3,'#000']}); //0代表加载的风格，支持0-2
+        var remethod=$("#remethod").val();
+        var order=$("#order").val();
+        var deal=$("#deal").val();
+        var endtime=$("#endtime").val();
+        var starttime=$("#starttime").val();
+        var page=$(this).attr('page')>=1?$(this).attr('page'):1;
+        var data="remethod="+remethod+"&order="+order+"&deal="+deal+"&endtime="+endtime+"&starttime="+starttime+"&page="+page;
+        var str="";
+        $.ajax({
+            url: "/award/inquire",
+            type:"get",
+            dataType:"json",
+            data:data,
+            success: function(obj){
+                layer.close(index);
+                if(obj.code==false){
+                    layer.alert(obj.msg,{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]})
+                }else {
+                    if (obj.data.plant.length == 0) {
+                        $("#totalrebatedata").html('$0.00');
+                        $("#recordsdata").html("<tr><td colspan='8' style='text-align: center'>{{ '暂无数据' | ctrans }}</td></tr>")
+                        return false;
+                    }
+                    $(obj.data.plant).each(function(k,v){
+                        var statusStr=(v.status==1?'<font color="green">{{ '已到账' | ctrans }}</font>':'<font color="red">{{'到账中'|  ctrans }}</font>');
+                        var tradelogin=v.ukflogin.substring(2,v.ukflogin.length);
+                        var tradeorder=v.ukorder.substring(2,v.ukorder.length);
+                       str+='<tr><td>'+v.closetime+'</td><td>'+tradeorder+'</td><td>'+tradelogin+'</td><td>'+v.tradename+'</td><td>'+v.login+'</td><td>'+v.ibname+'</td><td>'+v.amount+'</td><td>'+statusStr+'</td></tr>';
+                    });
+                    //分页
+                    var  nextpage=parseInt(obj.data.page.nextPage);
+                    var  Previouspage=parseInt(obj.data.page.previousPage);
+
+                    $(".Previouspage").attr('page',Previouspage);
+
+                    $(".nextpage").attr('page',nextpage);
+
+                    $("#recordsdata").html(str);
+                    $("#totalrebatedata").html('$'+obj.data.totalrebate);
+                }
+            },
+            error:function () {
+                layer.alert("{{ '请求错误' | ctrans }}",{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]});
+                layer.close(index);
+            }
+        });
+    });
+
+    /**
+     * 用户信息
+     */
+    {#$("#info").click(function () {#}
+        {#$.ajax({#}
+            {#url: "/show/one",#}
+            {#type:"POST",#}
+            {#dataType:"json",#}
+            {#success: function(obj){#}
+                {#if(obj.code==200){#}
+
+                    {#if(obj.data==2){#}
+                        {#$('#partnermenu').css("display","none");#}
+                    {#}#}
+                {#}#}
+            {#}#}
+        {#});#}
+    {#}).trigger("click");#}
+
+    /**
+     * 弹出层详情
+     */
+    $("#particulars").click(function () {
+        var index = layer.load(0, {shade: [0.3,'#000']}); //0代表加载的风格，支持0-2
+        var str="";
+        $.ajax({
+            url: "/account/agency/details",
+            type:"POST",
+            dataType:"json",
+            data:$("#myfrom").serialize(),
+            success: function(obj){
+                layer.close(index);
+                if(obj.code==false){
+                    layer.alert(obj.msg,{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]})
+                }else {
+                    if (obj.data.length ===0) {
+                        $("#under").html("<tr><td colspan='9' style='text-align: center'>{{ '暂无数据' | ctrans }}</td></tr>");
+                        return false;
+                    }
+                    $(obj.data).each(function(k,v){
+                        str+='<tr style="border-bottom: 1px solid #E5E5E5;">' +
+                            '<td class="tal" style="text-align: center" width="10%">'+v.orderid+'</td>' +
+                            '<td width="10%">'+v.symbol+'</td> ' +
+                            '<td width="12%" style="color: #0185ff">'+v.volume+'</td>' +
+                            '<td width="10%">'+v.openTime+'</td> ' +
+                            '<td width="10%">'+v.openPrice+'</td><'+
+                            '<td width="10%">'+v.closeTime+'</td><'+
+                            '<td width="10%">'+v.closePrice+'</td>'+
+                            '<td width="9%">'+v.commission+'</td>'+
+                            '<td width="10%" style="color: #009d59">'+v.profit+'</td>'+
+                            '<td width="9%">'+v.amount+'</td>'+
+                            '</tr>';
+                    });
+                    $("#under").html(str)
+                }
+            },
+            error:function () {
+                layer.alert("{{ '网络错误' | ctrans }}",{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]});
+                layer.close(index);
+                return false;
+            }
+        });
+    });
+});
+
+$(function () {
+    $("#trees").click(function () {
+        $('.right-box').animate({scrollTop: $('.selected').offset().top}, 500)
+    })
+})
+/**
+ * 直属用户账户信息
+ * @param userid
+ */
+function unAgentData(userid,chklayer) {
+
+	$(".email.theusername,.link3.theuser,.link4.pb").show();
+    var index = layer.load(1, {shade: [0.3,'#000']}); //0代表加载的风格，支持0-2
+    var str='';
+     var startdate=$("#startdate").val()?$("#startdate").val():"";
+    var enddate=$("#enddate").val()?$("#enddate").val():"";
+    $.ajax({
+        url: "/details/user",
+        type:"POST",
+        dataType:"json",
+        data:{'id':userid,'layer':chklayer,'enddate':enddate,'startdate':startdate},
+        success: function(obj){
+            $('.right-box').animate({scrollTop: 10000}, 100)
+            layer.close(index);
+            if(obj.code){
+                $('div.theusername').text(obj.data.username);
+                $('div.nickname').text(obj.data.nickname);
+				$('div.balance').text('$'+obj.data.totalBalance);
+                $('span.totalDep').text('$'+obj.data.totalDep);
+                $('span.totalWdr').text('$'+obj.data.totalWdr);
+                $('span.totalVolume').text(obj.data.totalVolume);
+                $('span.totalCommission').text('$'+obj.data.totalCommission);
+                $('span.totalProfit').text('$'+obj.data.totalProfit);
+                $('span.totalRebate').text('$'+obj.data.totalRebate);
+               var chklayer=obj.data.chklayer?obj.data.chklayer:0;
+                $(".search").attr('onclick','javascript:unAgentData(v_'+obj.data.userid+','+chklayer+');')
+
+                if(obj.data.subusers.length>0){
+                    var subusers=obj.data.subusers;
+                    var usercat="";
+                    for(i=0;i<subusers.length;i++){
+
+                        if (subusers[i].catid == 3){
+                            usercat="{{ '[代理人]'  }}";
+                        }else{
+                            usercat="{{ '[交易人]'  }}";
+                        }
+                        str+='<tr>' +
+                            '<td class="tal" width="21%">' +
+                            '<p>{{ '用户名：' | ctrans }}'+subusers[i].username+'</p>' +
+                            '<p>{{ '姓名：' | ctrans }}'+subusers[i].nickname+'&nbsp;<font color="red" >'+ usercat+'</font>' +
+                            '</p>' +
+                            '<a class="detail" style="cursor:pointer"; href="javascript:userInfo(\''+subusers[i].userid+'\')">{{ '详情' | ctrans }}</a></td>';
+                        if(subusers[i].uklogins.length>0){
+                            str+='<td><p>';
+                            var uklogins=subusers[i].uklogins;
+                            for(j=0;j<uklogins.length;j++){
+                                str+='<a class="account" style="cursor:pointer;" href="javascript:accountInfo(\''+uklogins[j].login+'\')">'+uklogins[j].login+'</a>:<font style="color:#164;">$'+uklogins[j].balance+'</font><br>';
+                            }
+                            str+='</p></td>';
+                        }else{
+                            str+='<td><font color="#bb4046">No account</font></td>';
+                        }
+                        str+='<td>'+subusers[i].addtime+'</td>';
+                        str+='<td class="money">$'+subusers[i].totalBalance+'</td>';
+                        str+='<td>'+subusers[i].totalVolume+'</td>';
+                        if(subusers[i].rebates.length>0){
+                            var rebates=subusers[i].rebates;
+                            str+='<td class="rebates">';
+                            for(j=0;j<rebates.length;j++){
+                                str+='<p>{{ '每手返佣:' | ctrans }}$'+rebates[j].amount+'</p>';
+                            }
+                            str+='</td>';
+                        }else{
+                            str+='<td class="rebates">$0</td>';
+                        }
+                        str+='</tr>';
+                    }
+                    $("table.thead tfoot.subusers").html(str);
+
+
+
+                }else{
+                    $("table.thead tfoot.subusers").html('<tr><td colspan="10">{{ '无代理下直属用户.' | ctrans }}</td></tr>');
+                }
+
+            }else {
+
+                layer.alert(obj.msg+'',{btn: ["{{ '确定' | ctrans }}"]});
+            }
+        },
+        error:function () {
+            layer.alert("{{ '请求错误' | ctrans }}",{btn: ["{{ '确定' | ctrans }}"]});
+            layer.close(index);
+            return false;
+        }
+
+    });
+}
+
+/**
+ * 详情提示层
+ * @param userid
+ */
+function userInfo(userid) {
+    //页面层
+    layer.open({
+        type: 2,
+        title:"{{ '资料详情' | ctrans }}",
+        area: ['1350px', '600px'], //宽高
+        resize:false,
+        content: '/user/transaction/details?id='+userid
+    });
+}
+/**
+ * 查看提示层
+ * @param login
+ */
+function accountInfo(login){
+
+//页面层
+    layer.open({
+        type: 2,
+        title:login+"-{{ '交易记录' | ctrans }}",
+        area: ['1300px', '600px'], //宽高
+        resize:false,
+        content: '/account/details?account='+login,
+        success: function(layero, index) {
+            layer.iframeAuto(index);
+        }
+    });
+}
+
+function subDetails(userid) {
+    var index = layer.load(1, {shade: [0.3,'#000']}); //0代表加载的风格，支持0-2
+    str='';
+    $.ajax({
+        url: "/sub/details",
+        type:"POST",
+        dataType:"json",
+        data:{'id':userid},
+        success: function(obj){
+            layer.close(index);
+            if (obj.data.length == 0) {
+                $("#under").html("<table class='tbody' id='under' cellpadding='0'  cellspacing='0'>" +
+                    "<tr><td colspan='5' style='text-align: center'>{{ '暂无数据' | ctrans }}</td></tr></table>")
+                return false;
+            }
+            if(obj.code==false){
+                layer.alert(obj.msg,{btn: ["{{ '确定' | ctrans }}"]})
+            }else {
+                $(obj.data).each(function(k,v){
+                    str+='<table class="tbody" id="under" cellpadding="0" cellspacing="0">' +
+                        '<tr>' +
+                        '<td class="tal" width="15%" style="text-align: center">'+v.realName+'</td>' +
+                        '<td width="15%" style="text-align: center">'+v.username+'</td>' +
+                        '<td width="15%">'+v.login+'</td>' +
+                        '<td width="15%">'+v.volume+'</td>' +
+                        '<td width="15%">'+v.addtime+'</td>' +
+                        '<td width="15%">' +
+                        '<a class="detail" style="cursor:pointer;" href="javascript:accountInfo(\''+v.login+'\')">{{ '查看' | ctrans }}</a>' +
+                        '</td>' +
+                        '</tr>' +
+                        '</table>';
+                });
+                $("#under").html(str);
+            }
+        },
+        error:function () {
+            layer.close(index);
+            layer.alert("{{ '网络错误' | ctrans }}",{title:"提示",btn: ["{{ '确定' | ctrans }}"]});
+            return false;
+        }
+    });
+
+
+
+}
+
+
+
+/**
+ * 代理下交易页
+ */
+$(function () {
+    /**代理下交易页
+     * 登录用户信息
+     */
+    $("#box").click(function () {
+
+        var str="";
+        $.ajax({
+            url: "/sub/details",
+            type:"POST",
+            dataType:"json",
+            success: function(obj){
+                if (obj.data.length == 0) {
+                    $("#under").html("<table class='tbody' id='under' cellpadding='0'  cellspacing='0'>" +
+                        "<tr><td colspan='5' style='text-align: center'>{{ '暂无数据' | ctrans }}</td></tr></table>")
+                    return false;
+                }
+                if(obj.code==false){
+                    layer.alert(obj.msg,{btn: ["{{ '确定' | ctrans }}"]})
+                }else {
+                    $(obj.data).each(function(k,v){
+                        str+='<table class="tbody" id="under" cellpadding="0" cellspacing="0">' +
+                            '<tr>' +
+                            '<td class="tal" width="15%" style="text-align: center">'+v.realName+'</td>' +
+                            '<td width="15%" style="text-align: center">'+v.username+'</td>' +
+                            '<td width="15%">'+v.login+'</td>' +
+                            '<td width="15%">'+v.volume+'</td>' +
+                            '<td width="15%">'+v.addtime+'</td>' +
+                            '<td width="15%">' +
+                            '<a class="detail" style="cursor:pointer;" href="javascript:accountInfo(\''+v.login+'\')">{{ '查看' | ctrans }}</a>' +
+                            '</td>' +
+                            '</tr>' +
+                            '</table>';
+                    });
+                    $("#under").html(str);
+                }
+            },
+            error:function () {
+                layer.alert("{{ '网络错误' | ctrans }}",{title:'提示',btn: ["{{ '确定' | ctrans }}"]});
+                return false;
+            }
+        });
+    }).trigger("click");
+})
+/**
+ * 代理下总览
+ */
+
+ var  Agent={
+    pagenum:1,
+    orderby:{},
+    setOrderby:function(me,key){
+        $(me).siblings().find('span').text('');
+        var tmpval=this.orderby[key];
+        this.orderby={};
+        if(tmpval=='ASC'){
+            $(me).find('span').text('▼');
+            this.orderby[key]='DESC';
+        }else{
+            $(me).find('span').text('▲');
+            this.orderby[key]='ASC';
+        }
+        this.list();
+    },
+    page:function (page) {
+        this.pagenum=page;
+        Agent.list();
+    }, search:function () {
+        this.pagenum=1;
+        Agent.list();
+    },
+     list:function () {
+         var index = layer.load(1, {shade: [0.3,'#000']}); //0代表加载的风格，支持0-2
+         var str="";
+          var query=$('input[name="query"]').val();
+         $.ajax({
+             url: "/sur/over",
+             type:"get",
+             dataType:"json",
+             data:{query:query,pagenum:this.pagenum,orderby:this.orderby},
+             success: function(obj){
+                 layer.close(index);
+                 if(obj.code==false){
+                     layer.alert(obj.msg,{btn: ["{{ '确定' | ctrans }}"]})
+                     return false;
+                 }else {
+                     if (obj.data.plant.length == 0) {
+                         $("#unders").html("" +
+                             "<tr><td colspan='5' style='text-align: center'>{{ '暂无数据' | ctrans }}</td></tr>")
+                         return false;
+                     }
+
+                      var login='';
+                     var totalDep=0.00; var totalWdr=0.00;
+                     $(obj.data.plant).each(function(k,v){
+                         $(v.LoginInfoList).each(function (key,value) {
+                             if(typeof(value.login)=='undefined'){
+                             }
+                             login+=value.login+','
+                         })
+                         if(login.length>2){
+                             login = login.substr(0, login.length - 1);
+                         }
+
+                         if(typeof(v.totalDep)!=='undefined'){ totalDep=v.totalDep;    }if(typeof(v.totalWdr)!=='undefined'){ totalWdr=v.totalWdr;  }
+                         str+='' +
+                             '<tr>' +
+
+                             '<td class="tal" id="tal1" width="15%" style="text-align: center;font-size:12px;padding-left:0%;">'+login+'['+v.nickname +']'+'</td>' +
+                             '<td class="tal" id="tal2" width="10%" style="text-align: center;font-size:12px;padding-left:0%;">'+v.usertypeName+'</td>' +
+                             '<td class="tal" id="tal3" width="15%" style="text-align: center;font-size:12px;">'+v.agentInfo+'</td>' +
+                             '<td class="tal" id="tal4" width="5%" style="text-align: center;font-size:12px;padding-left:1%;">'+'$'+parseFloat(v.totalCredit).toFixed(2)+'</td>' +
+                             '<td class="tal" id="tal5" width="7%" style="text-align: center;font-size:12px;padding-left:1%;">'+'$'+parseFloat(v.totalBalance).toFixed(2)+'</td>' +
+                             '<td class="tal" id="tal6" width="7%" style="text-align: center;font-size:12px;">'+'$'+parseFloat(v.totalEquity).toFixed(2)+'</td>' +
+                             '<td class="tal" id="tal7" width="7%" style="text-align: center;font-size:12px;padding-left:1%;">'+'$'+parseFloat(v.totalMarginFree).toFixed(2)+'</td>' +
+                             '<td class="tal" id="tal8" width="5%" style="text-align: center;font-size:12px;padding-left:1%;">'+'$'+(v.totalRebate!=undefined?parseFloat(v.totalRebate).toFixed(2):0)+'</td>' +
+                             '<td class="tal" id="tal9" width="7%" style="text-align: center;font-size:12px;padding-left:1%;">'+'$'+parseFloat(totalDep).toFixed(2)+'</td>' +
+                             '<td class="tal" id="tal10" width="7%" style="text-align: center;font-size:12px;padding-left:1%;">'+'$'+parseFloat(totalWdr).toFixed(2)+'</td>' +
+                             '<td width="15%" id="tal11"style="text-align: center;font-size:12px;">' +
+                             '<a class="detail" style="cursor:pointer;" href="javascript:accountInfo(\''+v.uklogin+'\')">{{ '交易订单' | ctrans }}</a>' +
+                             '</td>' +
+
+                             '</tr>' +
+                             '';
+                         login='';totalDep=0.00;totalWdr=0.00;
+                     });
+
+                     var Previouspage = parseInt(obj.data.page.previousPage);
+                     var nextpage= parseInt(obj.data.page.nextPage);
+                       var totalDeposit=parseFloat(obj.data.totalDeposit)
+                     $("#totalDeposit").text(totalDeposit.toFixed(2));
+                      var  totalWithdrawal=parseFloat(obj.data.totalWithdrawal)
+                     $("#totalWithdrawal").text(totalWithdrawal.toFixed(2));
+                     $('.Previouspage1').html(' <a href="javascript:void(0);" class="Previouspage " onclick="Agent.page('+Previouspage+');">{{ '上一页' | ctrans }}</a>');
+                     $('.nextpage2').html('<a href="javascript:void(0);" class="nextpage " onclick="Agent.page('+nextpage+');">{{ '下一页' | ctrans }}</a>');
+
+                     $("#unders").html(str);
+                 }
+             },
+             error:function () {
+                 layer.close(index);
+                 layer.alert("{{ '网络错误' | ctrans }}",{title:'提示',btn: ["{{ '确定' | ctrans }}"]});
+                 return false;
+             }
+         });
+
+     }
+}
+{#Agent.list();#}
+
+
+
+
+
+$(function () {
+    $("#particulars").click();
+    Agent.list();
+});
+
+$(function(){
+    var nav=$(".thead"); //得到导航对象
+    var win=$(window); //得到窗口对象
+    var sc=$(document);//得到document文档对象。
+    win.scroll(function(){
+        if(sc.scrollTop()>=100){
+            nav.addClass("fixednav");
+            $(".navTmp").fadeIn();
+        }else{
+            nav.removeClass("fixednav");
+            $(".navTmp").fadeOut();
+        }
+    })
+});
+
+$(function() {
+    var top=$("#top");
+    top.hide();
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 1){
+            top.fadeIn();
+        } else {
+            top.fadeOut();
+        }
+    });
+    top.click(function() {
+        $("html,body").animate({
+            scrollTop: 0
+        }, 1000);
+        return false;
+    });
+})
+

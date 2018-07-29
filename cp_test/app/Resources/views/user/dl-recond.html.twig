@@ -1,0 +1,193 @@
+{% extends 'user/userconsole.html.twig' %}
+{% block content %}
+    <script type="text/javascript" src="{{ asset('/js/user/partner.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/recond.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/plugins/agentTreeRecord.js') }}"></script>
+{#代理下交易记录#}
+<div class="right-box">
+    <div class="link">
+        <div class="fl">
+            <a href="javascript:void(0);" class="on">{{ '代理下交易记录' | ctrans }}</a>
+            <a href="javascript:void(0);" class="">{{ '下级交易记录概览' | ctrans }}</a>
+            <a href="javascript:void(0);" class="">{{ '下级持仓记录概览' | ctrans }}</a>
+        </div>
+        <div class="fr">
+            {% autoescape false %}
+            {% if balanceOrComlist.Comlist !=""  %}
+                <p>{{ '佣金账户：' | ctrans }}<span>{{ balanceOrComlist.Comlist }}</span></p>
+            {% endif %}
+            <p>{{ '交易余额：' | ctrans }}<span>{{ balanceOrComlist.balance }}</span></p>
+            {% endautoescape %}
+            {#<p>{{ '账户余额：' | ctrans }}<span>{{ balance.AccountBalance }}</span></p>#}
+            {#<p>{{ '资金总量：' | ctrans }}<span>{{ balance.sumBalance }}</span></p>#}
+        </div>
+    </div>
+    <div class="main-cont">
+        <div class="mian-title">{{ ' 代理下交易记录' | ctrans }}</div>
+        <div class="dl-recond">
+           {#<p style="text-align: right"> <a href="{{ asset('/records/excel') }}">代理交易记录excel下载</a> </p>#}
+            <div id="MTVZ"></div>
+            <br/>
+            <div class="link4">
+                <table class="thead" cellpadding="0"    cellspacing="0">
+                    <tr>
+                        <td width="15%">{{ '姓名' | ctrans }}</td>
+                        <td width="15%">{{ '账号' | ctrans }}</td>
+                        <td width="15%">{{ '交易账户' | ctrans }}</td>
+                        <td width="15%">{{ '总交易手数' | ctrans }}</td>
+                        <td width="15%">{{ '建立时间' | ctrans }}</td>
+                        <td width="15%">{{ '操作' | ctrans }}</td>
+                    </tr>
+                </table>
+               <div id="under"></div>
+            </div>
+        </div>
+    </div>
+     <div id="box" style="display: none"></div>
+    <div class="main-cont"   style="display: none">
+        <div class="mian-title">{{ '交易记录概览' | ctrans }}
+            {#<div class="fr zd-search"><input type="text" name="key" placeholder="{{ '时间/金额/流水号' | ctrans }}"> <button class="interior" onclick="seeCardAmountRecords();" type="button">{{ '立即搜索' | ctrans }}</button></div>#}
+        </div>
+        <div class="zd-recond">
+            <table class="table" cellspacing="0">
+
+                <tr>
+                    <td class="name">{{ '产品类别：' | ctrans }}</td>
+                    <td  colspan="3">
+                        <select class="w2 fl" style="height: 40px;width: 177px;padding-top: 8px;" name="symbol" id="symbol">
+                            <option value="0">{{ '全部' | ctrans }}</option>
+                            <option value="1101">{{ '货币' | ctrans }}</option>
+                            <option value="1102">{{ '商品' | ctrans }}</option>
+                            <option value="1103">{{ '白银' | ctrans }}</option>
+                        </select>
+                        <input type="text"  id="symbolxx" name="uklogin" placeholder="{{ '产品' | ctrans }}" style="margin-top: 5px;margin-left: 29px;">
+                    </td>
+                    <td class="name">{{ '开仓时间：' | ctrans }}</td>
+                    <td colspan="3">
+                        <input type="text" id="startOpentime" placeholder="{{ '开始时间' | ctrans }}" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})">&nbsp;&nbsp;-&nbsp;&nbsp;<input type="text" id="endOpentime" placeholder="{{ '结束时间' | ctrans }}" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '盈亏范围：' | ctrans }}</td>
+                    <td colspan="3">
+                        <input type="text" id="startprofit" placeholder="{{ '开始金额' | ctrans }}" >&nbsp;&nbsp;-&nbsp;&nbsp;<input type="text" id="endprofit" placeholder="{{ '结束金额' | ctrans }}" >
+                    </td>
+                    <td class="name">{{ '闭仓时间：' | ctrans }}</td>
+                    <td colspan="3">
+                        <input type="text" id="startClosetime" placeholder="{{ '开始时间' | ctrans }}" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})">&nbsp;&nbsp;-&nbsp;&nbsp;<input type="text" id="endClosetime" placeholder="{{ '结束时间' | ctrans }}" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                  </td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '账户' | ctrans }}/{{ '姓名' | ctrans }}:</td>
+                    <td> <input type="text"  id="xuklogin" name="uklogin" onchange="mt4Records.mt4loginxx(this.value)"  placeholder="{{ '输入账号或姓名' | ctrans }}"></td>
+                    <td>&nbsp;</td>
+                    <td colspan="3">
+                        <div style="">
+                            <button class="search interior" style="width:80px;margin-left: 20%" onclick="mt4Records.search();"  type="button">{{ '搜索' | ctrans }}</button>
+                        </div>
+                    </td>
+                    <td ><button class="search interior"  onclick="mt4Records.generate()" type="button">{{ '生成报表' | ctrans }}</button></td>
+                </tr>
+
+            </table>
+            <div style="width: 100%;height: 80px;padding-left: 30px;font-size: 18px" id="summrrydata">
+                <li style="display:block;float: left;">{{ '成交量的统计：' | ctrans }}<span  id="volume" style="color: #5ac3e1;">0.00</span><span style="color: #5ac3e1;" >{{ '手' | ctrans }}</span></li>
+                <li style="display:block;float: left;margin-left: 60px;" >{{ '盈亏统计：' | ctrans }}<span style="color: #db524e;">$</span><span id="profit" style="color:#db524e; ">0.00</span></li>
+                    <li style="display:block;float: left;margin-left: 60px;" >{{ '手续费统计：' | ctrans }}<span style="color: #db524e;">$</span><span id="Commission" style="color:#db524e; ">0.00</span></li>
+                    <li style="display:block;float: left;margin-left: 60px;" >{{ '仓息统计：' | ctrans }}<span style="color: #db524e;">$</span><span id="storehouse" style="color:#db524e; ">0.00</span></li>
+            </div>
+            <table class="zd-table  thead02"  cellpadding="0" cellspacing="0">
+                 <thead>
+                <tr class="thead ">
+                    <td>{{ 'MT4账号' | ctrans }}</td>
+                    <td>{{ '姓名' | ctrans }}</td>
+                    <td>{{ '上级代理' | ctrans }}</td>
+                    <td>{{ '订单' | ctrans }}</td>
+                    <td>{{ '交易类型' | ctrans }}</td>
+                    <td>{{ '成交量' | ctrans }}</td>
+                    <td>{{ '开仓价' | ctrans }}</td>
+                    <td onclick="mt4Records.setOrderby(this,'closeTime')">{{ '平仓价' | ctrans }}<span class="orderby">↑</span></td>
+                    <td>{{ '止损|止盈' | ctrans }}</td>
+                    <td onclick="mt4Records.setOrderby(this,'profit')">{{ '总盈亏' | ctrans }}<span class="orderby"></span></td>
+                    <td onclick="mt4Records.setOrderby(this,'commission')">{{ '手续费' | ctrans }}<span class="orderby"></span></td>
+                    <td onclick="mt4Records.setOrderby(this,'storage')">{{ '仓息' | ctrans }}<span class="orderby"></span></td>
+                    <td onclick="mt4Records.setOrderby(this,'totalRebate')">{{ '返佣' | ctrans }}<span class="orderby"></span></td>
+                </tr></thead>
+                <tbody id="recordsdata">
+
+                </tbody>
+            </table>
+            <table class="zd-table">
+                <tr class="ttop">
+                    {#<td width="59"><input class="checkbox" type="checkbox"></td>#}
+                    {#<td colspan="4">{{ '全选' | ctrans }}</td>#}
+                    <td>
+                        <div class="page fr" style="padding: 0;">
+                            <div class="fr Previouspage1"> <a href="javascript:void(0);" class="Previouspage " onclick="mt4Records.page(1);">{{ '上一页' | ctrans }}</a></div>
+                            <div class="fr nextpage2"><a href="javascript:void(0);" class="nextpage " onclick="mt4Records.page(2)">{{ '下一页' | ctrans }}</a></div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="main-cont"   style="display: none">
+        <div class="mian-title">{{ '持仓记录概览' | ctrans }}
+            {#<div class="fr zd-search"><input type="text" name="key" placeholder="时间/金额/流水号"> <button class="interior" onclick="seeCardAmountRecords();" type="button">{{ '立即搜索' | ctrans }}</button></div>#}
+        </div>
+        <script type="text/javascript" src="/js/user/sublogins.js"></script>
+        <div class="zd-recond">
+            <table class="table" cellspacing="0">
+                <tr>
+                    <td>{{ '账号' | ctrans }}/{{ '姓名' | ctrans }}:<input type="text" onkeyup="OpenTradingObj.setUsername(this.value);" value="" placeholder="{{ '账号或姓名' | ctrans }}"></td>
+                    <td>{{ '交易品种：' | ctrans }}<input type="text" onkeyup="OpenTradingObj.setSymbol(this.value);" value="" placeholder="{{ '如' | ctrans }}:XAUUSD"></td>
+                    <td>{{ '开仓时间：' | ctrans }}<input type="text" onkeyup="OpenTradingObj.setOpentimeBegin(this.value);" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="" placeholder="{{ '开始时间' | ctrans }}:2018-10-10">-
+                        <input type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" onkeyup="OpenTradingObj.setOpentimeEnd(this.value);" value="" placeholder="{{ '截止时间' | ctrans }}:2018-10-11"></td>
+                    <td><button class="search interior" style="width:80px;" onclick="OpenTradingObj.searchSubmit();"  type="button">{{ '搜索' | ctrans }}</button></td>
+                    <td><button class="search interior"  onclick="" type="button">{{ '生成报表' | ctrans }}</button></td>
+                </tr>
+                <tr><td>{{ '成交总量：' | ctrans }}<span class="totalVolume"></span></td>
+                    <td>{{ '盈亏总额：' | ctrans }}<span class="totalProfit"></span></td>
+                    <td>{{ '手续费总额：' | ctrans }}<span class="totalCommission"></span></td>
+                    <td>{{ '总余额：' | ctrans }}<span class="totalBalance"></span></td></tr>
+                <tr><td>{{ '总净值：' | ctrans }}<span class="totalEquity"></span></td>
+                    <td>{{ '总可用资金：' | ctrans }}<span class="totalMarginFree"></span></td>
+                    <td>{{ '仓息统计：' | ctrans }}<span class="totalStorage"></span></td><td></td></tr>
+            </table>
+            <style type="text/css">
+                .zd-table td{text-align: center;}
+            </style>
+            <table class="zd-table  thead02"  id="opentradingdata" cellpadding="0" cellspacing="0">
+                <thead>
+                <tr class="thead" style="">
+                    <td>{{ 'MT4账号' | ctrans }}</td>
+                    <td>{{ '姓名' | ctrans }}</td>
+                    <td>{{ '上级代理' | ctrans }}</td>
+                    <td>{{ '订单' | ctrans }}</td>
+                    <td>{{ '交易类型' | ctrans }}</td>
+                    <td>{{ '成交量' | ctrans }}</td>
+                    <td>{{ '开仓价' | ctrans }}</td>
+                    <td>{{ '当前价' | ctrans }}</td>
+                    <td>{{ '止损|止盈' | ctrans }}</td>
+                    <td>{{ '盈亏' | ctrans }}</td>
+                    <td>{{ '手续费' | ctrans }}</td>
+                    <td>{{ '仓息' | ctrans }}</td>
+                    <td>{{ '余额' | ctrans }}</td>
+                    <td>{{ '净值' | ctrans }}</td>
+                    <td>{{ '可用资金' | ctrans }}</td>
+                    <td>{{ '风险率' | ctrans }}</td>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</div>
+
+
+{% endblock %}

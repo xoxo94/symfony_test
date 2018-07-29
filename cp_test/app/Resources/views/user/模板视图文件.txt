@@ -1,0 +1,22 @@
+﻿account.html.twig           账户管理
+
+my.html.twig                资料管理
+
+enter.html.twig             办理入金
+
+outer.html.twig             办理出金
+
+partner.html.twig           合作伙伴
+
+sale-recond.html.twig       交易记录
+
+dl-recond.html.twig         代理下交易记录
+
+account-info.html.twig      代理下交易 详情视图
+
+record.html.twig            代理下交易直属用户 账户信息
+
+
+
+
+

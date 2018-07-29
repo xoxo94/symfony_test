@@ -1,0 +1,266 @@
+{% extends 'form/layout.html.twig' %}
+{% block content %}
+    {% if not attribute(data.MODULE,"system_not_write") is defined or data.MODULE.system_write!='1'%}
+        <form action="{{ asset('/register/account/agent') }}" id="formno" method="post" onsubmit="formInit.submit(this);return false;">
+            <div class="st-tabs">
+                <ul>
+                    <li class="on"><i>{{ '填写个人资料' | ctrans }}</i></li>
+                    <li><i>{{ '开户资料' | ctrans }}</i></li>
+                    <li><i>{{ '阅读并接受协议' | ctrans }}</i></li>
+                    <li class="last"><i>{{ '完成' | ctrans }}</i></li>
+                </ul>
+            </div>
+            <input name="IBserver" type="hidden" value="{{ data.IBID.IB_server }}" />
+            <input name="IBgroup" type="hidden" value="{{ data.IBID.IB_group }}" />
+            <input name="IBchkgroup" type="hidden" value="{{ data.IBID.IB_lock }}" />
+
+            <div class="st-cont">
+                <div class="select" id="pluginslang">
+                    <script type="text/javascript" src="{{ asset('/js/lang.js') }}"></script>
+                </div>
+                <div class="tab" style="display: block;">
+                    <table class="table" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td class="st-title" colspan="4">A. {{ '个人资料' | ctrans }}</td>
+                        </tr>
+                        <tr>
+                            <td class="name">{{ '客户姓名' | ctrans }}</td>
+                            <td class="input" colspan="3">
+                                <div class="label fl w1 mr10" style="width:20%;">
+                                    <input name="contactXEn" class="w1 empty" onkeyup="this.value=this.value.replace(/\s+/g,' ').replace(/[\']/,'`').replace(/[^a-z @A-Z`\.\d]/g,'');" type="text">
+                                    <label for="male">{{ '姓(英文/拼音)' | ctrans }}</label>
+                                </div>
+                                <div class="label fl w2 mr10" style="width:28%;">
+                                    <input name="contactMEn" class="w2 empty" onkeyup="this.value=this.value.replace(/\s+/g,' ').replace(/[\']/,'`').replace(/[^a-z @A-Z`\.\d]/g,'');" type="text">
+                                    <label for="male">{{ '名字(英文/拼音)' | ctrans }}</label>
+                                </div>
+                                <div class="label fl w1 mr10" style="width:10%;">
+                                    <input name="contactCnX" class="w1 empty" type="text">
+                                    <label for="male">{{ '姓(中文)' | ctrans }}</label>
+                                </div>
+                                <div class="label fl w2 mr10" style="width:18%;">
+                                    <input name="contactCnM" class="w2 empty" type="text">
+                                    <label for="male">{{ '名字(中文)' | ctrans }}</label>
+                                </div>
+								<div class="label fl w2 mr10" style="width:16%;">
+									<input name="Fruit" checked="checked" class="fl m0" type="radio" value="1"/>
+									<label class="sex fl" for="male">{{ '先生' | ctrans }}</label>
+									<input name="Fruit" class="fl m0" type="radio"  value="0"/>
+									<label class="sex fl" for="male2">{{ '女士' | ctrans }}</label>
+								</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="name">{{ '联系地址' | ctrans }}</td>
+                            <td class="input" colspan="3">
+                                <div class="mb12">
+                                    <select name="country" class="w3 fl mr10 empty">
+                                        <option selected="selected" value="">{{ '选择国籍' | ctrans }}...</option>
+                                        {% for item in data.countrys %}
+                                            <option value="{{ item.country }}">{{ item.country }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <select name="countryRes" class="w3 fl empty" onchange="var tmp=this.options[this.selectedIndex].getAttribute('alt');var tmpc=document.getElementById('mobileCode');if(tmp !=null && tmp!=undefined && tmp!=''){tmpc.value='+'+tmp;tmpc.setAttribute('readonly','readonly');}else{tmpc.value='';tmpc.removeAttribute('readonly');}">
+                                        <option selected="selected" alt="" value="">{{ '选择居住国家' | ctrans }}...</option>
+                                        {% for item in data.countrys %}
+                                            <option value="{{ item.country }}" alt="{{ attribute(item,"mobileCode") is defined ? item.mobileCode:"" }}">{{ item.country }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="mb12">
+                                    <input name="province" class="w3 fl mr10 empty" type="text" placeholder="{{ '所属直辖市/省份' | ctrans }}">
+                                    <input name="city" class="w3 fl empty" type="text" placeholder="{{ '所属城市' | ctrans }}">
+                                </div>
+                                <input name="address" class="w3 fl empty" type="text" placeholder="{{ '您的详细地址' | ctrans }}">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="name">{{ '出生年月' | ctrans }}</td>
+                            <td class="input" colspan="3">
+                                <input name="birthday" class="w6 fl mr10 empty" type="text" placeholder="{{ '您出生年月' | ctrans }}" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                                <input name="IDcard" class="w6 fl empty" type="text" onkeyup="value=value.replace(/[^\w\1]/ig,'') "  placeholder="{{ '您的证件号码' | ctrans }}">
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table " border="0" cellpadding="0" cellspacing="0">
+                        <tr class="notice">
+                            <td class="st-title" colspan="4">B.{{ '联络资料' | ctrans }}</td>
+                        </tr>
+                        <tr class="notice">
+                            <td class="name">{{ '电子邮箱' | ctrans }}</td>
+                            <td class="input" colspan="3">
+                                <input name="email" class="w7 fl mr20 email empty" type="text" placeholder="{{ '您的电子邮箱' | ctrans }}" />
+                                <input name="emailSub" class="fl m0 empty" checked="checked" type="checkbox" />
+                                <label class="sex" for="male">{{ '订阅最新咨讯' | ctrans }}</label>
+                            </td>
+                        </tr>
+                        <tr class="notice">
+                            <td class="name">{{ '联系电话' | ctrans }}</td>
+                            <td class="input" colspan="3">
+                                <input name="mobileCode" id="mobileCode" onkeyup="var tmp=this.value.replace(/[^\d]/g,'');if(tmp !=null && tmp!=undefined && tmp!=''){this.value='+'+tmp;}else{this.value='';}" class="w8 mr0 empty"  type="text" placeholder="国家代码" />&nbsp;&nbsp;-&nbsp;&nbsp;
+                                <input name="mobile" class="w7 mr0 empty" onkeyup="value=value.replace(/[^\d]/g,'') " type="text" placeholder="{{ '手机号码' | ctrans }}" />
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table " border="0" cellpadding="0" cellspacing="0">
+                        <tr class="notice">
+                            <td class="st-title" colspan="4">C.{{ '证件上传' | ctrans }}</td>
+                        </tr>
+
+                        {% if not attribute(data.WEB,"system_register_no_idcard") is defined or data.WEB.system_register_no_idcard!='1' %}
+							<tr class="notice">
+								<td class="name">{{ '身份证正面上传' | ctrans }}</td>
+								<td class="input" colspan="3" >
+									<input name="credentials_1" readonly class="w7 fl empty" type="text" placeholder="" />
+									<input type="file" style="position: relative" onchange="formInit.upload(this);" class="uploadCert fl" accept="image/gif, image/jpg,image/jpeg, image/bmp, image/png" capture="camera" name="file" />
+								</td>
+							</tr>
+							<tr class="notice">
+								<td class="name">{{ '身份证反面上传' | ctrans }}</td>
+								<td class="input" colspan="3">
+									<input name="credentials_2" readonly class="w7 fl empty" type="text" placeholder="" />
+									<input type="file" style="position: relative" onchange="formInit.upload(this);" class="uploadCert fl" accept="image/gif, image/jpg,image/jpeg, image/bmp, image/png" capture="camera" name="file" />
+								</td>
+							</tr>
+                        {% endif %}
+                        {% if not attribute(data.WEB,"system_register_no_address") is defined or data.WEB.system_register_no_address!='1' %}
+							<tr class="notice">
+								<td class="name">{{ '地址证明上传' | ctrans }}</td>
+								<td class="input" colspan="3">
+									<input name="credentials_5" readonly class="w7 fl" type="text" placeholder="" />
+									<input type="file" style="position: relative" onchange="formInit.upload(this);" class="uploadCert fl" accept="image/gif, image/jpg,image/jpeg, image/bmp, image/png" capture="camera" name="file" />
+								</td>
+							</tr>
+                        {% endif %}
+                        {% if not attribute(data.WEB,"system_register_no_bill") is defined or data.WEB.system_register_no_bill!='1' %}
+							<tr class="notice">
+								<td class="name">{{ '账单证明上传' | ctrans }}</td>
+								<td class="input" colspan="3">
+									<input name="credentials_6" readonly class="w7 fl" type="text" placeholder="" />
+									<input type="file" style="position: relative" onchange="formInit.upload(this);" class="uploadCert fl" accept="image/gif, image/jpg,image/jpeg, image/bmp, image/png" capture="camera" name="file" />
+								</td>
+							</tr>
+                        {% endif %}
+
+                        <tr>
+                            <td colspan="4" class="tac"><button type="button" onclick="formInit.next(this);" class="btn st-btn next">{{ '继续，进入下一步' | ctrans }}</button></td>
+                        </tr>
+                    </table>
+
+
+                </div>
+                <div class="tab" style="display: none;">
+                    <table class="table" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td colspan="4" class="st-title">D. {{ '账户性质' | ctrans }}</td>
+                        </tr>
+                        <tr>
+                            <td class="name">{{ '账户类型' | ctrans }}</td>
+                            <td class="input" colspan="3">
+                                <select name="usertype" class="w9 fl mr10 empty">
+                                    <option value="">{{ '选择账户类型' | ctrans }}...</option>
+                                    {% for item in data.usertypes %}
+                                        <option value="{{ item.id }}" >{{ item.name | ctrans }}</option>
+                                    {% endfor %}
+                                </select>
+
+                                <select name="lever" class="w9 fl empty">
+                                    <option selected="selected" value="">{{ '选择杠杆比例' | ctrans }}...</option>
+                                    {% for item in data.userlevers %}
+                                        <option value="{{ item.name }}">{{ item.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="name">{{ '登录密码' | ctrans }}</td>
+                            <td class="input" colspan="3">
+                                <div class="label fl w10 mr10">
+                                    <input name="password" class="empty" onkeyup="this.value=this.value.replace(/[\W]/g,'');" type="password">
+                                    <label for="male">{{ '登录密码不能全为数字并长度不能小于8' | ctrans }}</label>
+                                </div>
+                                <div class="label fl w10">
+                                    <input name="chkpassword" class="empty" type="password">
+                                    <label for="male">{{ '重新输入密码，两次密码必须一致' | ctrans }}</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr style="display: none">
+                            <td class="name">{{ '个人经理' | ctrans }}</td>
+                            <td class="input" colspan="3">
+                                <select name="manager" class="w9 fl">
+                                    <option selected="selected" value="">{{ '选择个人经理' | ctrans }}...</option>
+                                    {% for item in data.managers %}
+                                        <option value="{{ item.id }}">{{ item.contact }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            {#<td class="name">{{ '代理信息' | ctrans }}</td>#}
+                            <td class="input" colspan="3">
+                                <input name="IBcode" class="w10 empty" type="hidden" value="{{ data.IBID.IB_code }}" placeholder="{{ '代理IB代码' | ctrans }}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="text-align: center">
+                                <button type="button" onclick="formInit.back(this);" class="st-btn btn tar back">{{ '返回上一步' | ctrans }}</button>
+                                <button type="button" onclick="formInit.next(this);" class="st-btn tar sure next">{{ '继续，进入下一步' | ctrans }}</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab" style="display: none;">
+                    <table class="table" cellpadding="0" cellspacing="0">
+
+                    </table>
+                    <table class="table" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td colspan="4" style="padding: 10px 40px;">
+                                <span class="span">{{ '相关协议' | ctrans }}</span>
+
+                                    {% for row in  data.agreement %}
+                                    <a href="{{ row.title }}" target="_blank" class="red" style="font-weight:800;color:#c91c1e;">
+                                        <img src="{{ asset('public/images/pdf.png') }}">{{ row.content | ctrans }}</a>
+                                        {% endfor %}
+
+                                <br/>
+                                <input class="fl m0 empty" name="agreement" style="margin-left:80px;" type="checkbox" />
+                                <label class="sex fl" for="male" onclick="$('input[name=agreement]').click()">{{ '本人已详细阅读以上协议，理解并同意该业务及声明之条款' | ctrans }}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: right">
+                                <div class="yzm">
+                                    <p class="fl">{{ '验证码' | ctrans }}：</p>
+                                    <img id="checkcode" src="{{ asset('/captcha/window') }}" onClick="this.src='/captcha/window?t='+(new Date().getTime());"  class="mr10" alt="" style="height:48px">
+                                    <input type="text" name="captcha" class="w5 fl empty">
+                                </div>
+                            </td>
+                            <td  colspan="2" style="text-align: left">
+                                <div id="conceal">
+                                    <button type="button" onclick="formInit.back(this);" class="st-btn btn tar back">{{ '返回上一步' | ctrans }}</button>
+                                    <button type="submit" id="submitno" class="st-btn sure submit">{{ '确认无误现在申请' | ctrans }}</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab" style="display: none;">
+                    <div class="succ">{{ '恭喜您！资料已提交成功' | ctrans }}</div>
+
+                </div>
+            </div>
+        </form>
+    {% else %}
+        <div style='padding:100px;height:150px;'><p style='text-align:center;color:{{ attribute(data.MODULE,"MainColor") is defined ? data.MODULE.MainColor:0 }};font-size:14px;'>{{ '目前网站正在维护，暂不支持该操作。' | ctrans }}</p></div>
+    {% endif %}
+
+{% endblock %}
+{% block initScripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('/plugins/WdatePicker/WdatePicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/public/ccount/js/layer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/form/register.js') }}"></script>
+{% endblock %}

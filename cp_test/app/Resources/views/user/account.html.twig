@@ -1,0 +1,356 @@
+{% extends 'user/userconsole.html.twig' %}
+{% block content %}
+    <script type="text/javascript" src="{{ asset('/js/user/account/account.js') }}"></script>
+<div class="right-box">
+    <div class="link">
+        <div class="fl">
+            {% if data.tradlist!=[] %}
+                <a href="javascript:void(0);" class="on">{{ '交易账户' | ctrans }}</a>
+                <a href="javascript:void(0);" >{{ '内部转账' | ctrans }}</a>
+            {% endif %}
+            <a href="javascript:void(0);">{{ '账单记录' | ctrans }}</a>
+            {#{% if data.WEB.cash_wallet_enable=='1' %}#}
+            {#<a href="javascript:void(0);" id="motion">{{ '余额自动转入' | ctrans }}</a>#}
+            {#{% endif %}#}
+        </div>
+        <div class="fr">
+            {% autoescape false %}
+            {% if balanceOrComlist.Comlist !=""  %}
+                <p>{{ '佣金账户：' | ctrans }}<span>{{ balanceOrComlist.Comlist }}</span></p>
+            {% endif %}
+            <p>{{ '交易余额：' | ctrans }}<span>{{ balanceOrComlist.balance }}</span></p>
+            {% endautoescape %}
+            {#{% if data.WEB.cash_wallet_enable=='1' %}#}
+            {#<p>{{ '账户余额：' | ctrans }}<span>{{ balance }}</span></p>#}
+            {#<p>{{ '资金总量：' | ctrans }}<span>{{ sumBalance }}</span></p>#}
+            {#{% endif %}#}
+        </div>
+    </div>
+    {% if data.tradlist!=[] %}
+        {#但是没有交易账户  不输出交易账户选项卡 有则输出 #}
+        <div class="main-cont">
+            <div class="tabs">
+                <ul style="display: none">
+                    <li class="on">{{ '基金账户' | ctrans }}</li>
+                    <li>{{ '交易账户' | ctrans }}</li>
+                    <li>{{ '投资账户' | ctrans }}</li>
+                </ul>
+                <div class="cont">
+                    <div class="tab" style="display: none">
+                        <dl>
+                            <dt class="of"><span class="fl">{{ '基金账户' | ctrans }}</span> <i class="fr add" onclick="accounts.fund.add()" data-text="基金账户">{{ '+ 新增' | ctrans }}</i></dt>
+
+                            {% for funds in data.fundlist %}
+                                <dd class="fund">
+                                    <div class='b type fl'>
+                                        <div class='cc'>
+                                            <p>{{ '基金账户' | ctrans }}</p>
+                                            <i>{{funds.login ?: ''}}</i>
+                                        </div>
+                                    </div>
+                                    <div class='fl tinfo'>
+                                        <p><i>{{ '社区昵称：' | ctrans }}</i>{{funds.nickname ?: ''}}</p>
+                                        <p><i>{{ '服务器：' | ctrans }}</i>{{funds.mt4group ?: '' }}</p>
+                                        <p><i>{{ '提成比例：' | ctrans }}</i>{{funds.rebate ?: '' }}%</p>
+                                        <p><i>{{ '杠杆比例：' | ctrans }}</i>{{funds.leverage ?: '' }}</p>
+                                        <p><i>{{ '建立时间：' | ctrans }}</i>{{funds.addtime ?: '' }}</p>
+                                        <p><i style="color: #0185ff;">{{ '账户余额：' | ctrans }}</i>
+                                            <span><span class="uklogins" data="{{ funds.uklogin }}">${{funds.balance ?: '' }}</span>  {{ '利润池' | ctrans }}({{ funds.seize }})
+                                        <img src="{{ asset('http://images.gsdo.com/gsdo/images/flash.png') }}"  style="height: 14px;vertical-align: baseline;" onclick="accounts.fund.profitOutShow('{{ funds.uklogin }}')" class="profitout">
+                                    </span>
+                                        </p>
+                                        <p><i>{{ '投资账户：' | ctrans }}</i>
+                                            <span>{% for item in funds.subwiths %}{{ item.login }}({{ '余额:' | ctrans }}${{ item.balance }}){% endfor %}
+                                    </span></p>
+                                        <p><i>{{ '受理新的投资：' | ctrans }}</i><span>{{funds.isnewWithStr ?: '' }}</span></p>
+                                        <p><i>{{ '历史投资：' | ctrans }}</i>{{funds.showHistoryStr ?: '' }}</p>
+                                        <p><i>{{ '当前投资：' | ctrans }}</i>{{funds.showCurrentStr ?: '' }}</p>
+                                        <p class="setbutton"><i onclick="accounts.fund.update(this);" class="mt4no" data='["{{ funds.uklogin }}",{{ funds.login }},"{{ funds.nickname }}",{{ funds.rebate }},{{ funds.isnewWith }},{{ funds.showHistory }},{{ funds.showCurrent }},{{ funds.autoSeize }}]'>{{ '账户设置' | ctrans }}</i></p>
+                                    </div>
+                                </dd>
+                            {% endfor %}
+
+                            {% if  data.fundlist==[] %}
+                                <dd>
+                                    <div class="type fl">
+                                        <div class="cc">
+                                            <p style="padding-top:49px">{{ '没有基金账户' | ctrans }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="fl tinfo" style="line-height: 124px;font-size: 24px;">
+                                        <a href="javascript:accounts.fund.add();" style="color:#0085ff;">{{ '点击这里' | ctrans }}</a>{{ '新增账户' | ctrans }}
+                                    </div>
+                                </dd>
+                            {% endif %}
+
+                        </dl>
+                    </div>
+                    <div class="tab">
+                        <dl>
+                            <dt class="of"><span class="fl">{{ '交易账户' | ctrans }}</span> <i class="fr add" onclick="accounts.trad.add();" data-text={{ '"交易账户"' | ctrans }}>{{ '+ 新增' | ctrans }}</i></dt>
+                            {% for j in data.tradlist %}
+                                <dd>
+                                    <div class="type fl">
+                                        <div class="cc">
+                                            <p>{{ '交易账户' | ctrans }}</p>
+                                            <i>{{j.login ?: ''}}</i>
+                                        </div>
+                                    </div>
+                                    <div class="fl tinfo">
+
+                                        <p><i id="i">{{ '账户余额：' | ctrans }}</i><span class="balance uklogins" data="{{ j.uklogin }}">${{j.balance ?: ''}}</span></p>
+                                        {#<p><i>{{ '分组：' | ctrans }}</i>{{j.mt4group ?: ''}}</p>#}
+                                        <p><i>{{ '服务器：' | ctrans }}</i>{{j.mt4Server ?: ''}}</p>
+                                        <p><i>{{ '杠杆比例：' | ctrans }}</i>{{j.leverage ?: ''}}</p>
+                                        <p><i style="width: 115px">{{ '默认交易密码：' | ctrans }}</i>{{j.pass ?: ''}}&nbsp&nbsp&nbsp
+                                            <button style="cursor: pointer;background-color: white;border: 1px solid#ff6c46;color: #ff6c46;border-radius: 5px" onclick="accounts.pass.update('{{ j.uklogin }}');">{{ '修改交易密码' | ctrans }}</button>
+                                        </p>
+                                        <p><i style="width: 115px">{{ '默认观摩密码：' | ctrans }}</i>{{j.invalpass ?: ''}}
+                                            &nbsp&nbsp&nbsp
+                                            <button style="cursor: pointer;background-color: white;border: 1px solid#ff6c46;color: #ff6c46;border-radius: 5px" onclick="accounts.nval.update('{{ j.uklogin }}');">{{ '修改观摩密码' | ctrans }}</button>
+                                        </p>
+                                        <p><i>{{ '建立时间：' | ctrans }}</i>{{j.addtime ?: ''}}</p>
+
+                                    </div>
+                                </dd>
+                            {% endfor %}
+                            {% if  data.tradlist==[] %}
+                                <dd>
+                                    <div class="type fl none">
+                                        <div class="cc">
+                                            <p style="padding-top:49px">{{ '没有交易账户' | ctrans }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="fl tinfo" style="line-height: 124px;font-size: 24px;">
+                                        <a href="javascript:accounts.trad.add();" style="color:#0085ff;">{{ '点击这里' | ctrans }}</a>{{ '新增账户' | ctrans }}
+                                    </div>
+                                </dd>
+                            {% endif %}
+                        </dl>
+                    </div>
+                    <div class="tab" style="display: none;">
+                        <dl>
+                            <dt class="of"><span class="fl">{{ '投资账户' | ctrans }}</span> <i  class="fr add" onclick="accounts.wiht.add(this);" data-text={{ '"投资账户"' | ctrans }}>{{ '+ 新增' | ctrans }}</i></dt>
+                            {% for t in data.withlist %}
+                                <dd>
+                                    <div class="type fl" style="margin-top: 55px;">
+                                        <div class="cc">
+                                            <p>{{ '投资账户' | ctrans }}</p>
+                                            <i>{{t.login ?: ''}}</i>
+                                        </div>
+                                    </div>
+                                    <div class="fl tinfo">
+                                        <p><i style="color: #0185ff;">{{ '账户余额：' | ctrans }}</i><span class="balance uklogins" data="{{ j.uklogin }}">${{t.balance ?: ''}}</span></p>
+                                        <p><i>{{ '服务器：' | ctrans }}</i>{{t.mt4group ?: ''}}</p>
+                                        <p><i>{{ '所跟基金账户：' | ctrans }}</i>{{t.ukflogin ?: ''}}</p>
+                                        <p><i>{{ '杠杆比例：' | ctrans }}</i>{{t.leverage ?: ''}}</p>
+                                        <p><i>{{ '建立时间：' | ctrans }}</i>{{t.addtime ?: ''}}</p>
+                                        <p class="investset"><i onclick="accounts.wiht.update(this)" data='[{{t.login}},"{{ t.uklogin }}","{{ t.flogin }}"]' class="setting" data-text={{ '"设置"' | ctrans }}>{{ '设置' | ctrans }}</i></p>
+                                    </div>
+                                </dd>
+                            {% endfor %}
+
+                            {% if  data.withlist==[] %}
+                                <dd>
+                                    <div class="type fl">
+                                        <div class="cc">
+                                            <p style="padding-top:49px">{{ '没有投资账户' | ctrans }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="fl tinfo" style="line-height: 124px;font-size: 24px;">
+                                        <a href="javascript:accounts.wiht.add(this);" style="color:#0085ff;">{{ '点击这里' | ctrans }}</a>{{ '新增账户' | ctrans }}
+                                    </div>
+                                </dd>
+                            {% endif %}
+
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+<!--内部账户-->
+    {% if data.tradlist != [] %}
+    <div class="main-cont"  style="display: none">
+        <div class="mian-title">{{ '内部转账 ' | ctrans }}<i>{{ '处理账户与账户之间的资金流转' | ctrans }}</i></div>
+        <div class="transfer">
+            <form id="inside" action="{{ asset('/user/book/transfer') }}"  onsubmit="manageAmount(this);return false">
+            <table cellpadding="0" cellspacing="0">
+                {#{% if data.WEB.cash_wallet_enable=='1' %}#}
+                {#<tr>#}
+                    {#<td class="name">{{ '账户余额：' | ctrans }}</td>#}
+                    {#<td colspan="3" class="money"><span>${{ param.balance }}</span><button type="button" class="auto">{{ '余额自动转入' | ctrans }}</button></td>#}
+                {#</tr>#}
+                {#{% endif %}#}
+                <tr>
+                    <td class="name">{{ '操作：' | ctrans }}</td>
+                    <td colspan="3">
+                        {#{% if data.WEB.cash_wallet_enable=='1' %}#}
+                        {#<input class="w1" value="in" name="manage" checked type="radio" />#}
+                        {#<label for="male">{{ '储蓄账户到交易账号' | ctrans }}</label>#}
+                        {#<input class="w1" value="out" name="manage" type="radio" />#}
+                        {#<label for="male2">{{ '交易账户到储蓄账户' | ctrans }}</label>#}
+                        {#{% endif %}#}
+                        <input class="w1" value="other" checked name="manage" type="radio" />
+                        <label for="male3">{{ '交易账户到交易账户' | ctrans }}</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="name " >{{ '资金源:' | ctrans }}</td>
+                    <td>
+                        <select class="w1 fl" style="float:left" name="bankcard" id="saving">
+                            <option value="0">{{ '请选择资金源账号' | ctrans }}</option>
+                            {% for account in data.tradlist %}
+                                <option value="{{account.uklogin }}">{{account.login }}{{ '-交易账户' | ctrans }}</option>
+                            {% endfor %}
+                            {#{% for account in data.commission %}#}
+                                {#<option value="{{account.uklogin }}" disabled="true">{{account.login }}{{ '-佣金账户' | ctrans }}</option>#}
+                            {#{% endfor %}#}
+
+                            {#{% for account in data.withlist %}#}
+                                {#<option value="{{account.uklogin }}">{{account.login }}{{ '-投资账户' | ctrans }}</option>#}
+                            {#{% endfor %}#}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="name " >{{ '目标服务器:' | ctrans }}</td>
+                    <td>
+                        <select name="tomt4" style="border-radius: 10px;">
+                            <option value="0">{{ '请选择目标账号所在服务器' | ctrans }}</option>
+
+                            {% for mt4 in data.mt4list %}
+                                <option value="{{ mt4.id }}">{{ mt4.name }}</option>
+                            {% endfor %}
+
+
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="name " >{{ '目标账号:' | ctrans }}</td>
+                    <td>
+                        <input class="text" type="text" name="tobankcard" value="" placeholder="{{ '请填写要转入的账号' | ctrans }}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="name">{{ '交易金额:' | ctrans }}</td>
+                    <td><input class="text" onkeyup="this.value=this.value.replace(/[^\d.]/g,'') "  type="text" name="amount" ></td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align: center;"><button class="button" type="submit" id="insides">{{ '提交' | ctrans }}</button></td>
+                </tr>
+            </table>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+
+<!--账单记录-->
+    <div class="main-cont"  {% if data.tradlist != [] %} style="display: none;" {% else %}  style="display: block;" {% endif %} >
+        <div class="mian-title">{{ '账单记录' | ctrans }}
+            <div class="fr zd-search"><input type="text" name="key" placeholder="{{ '时间' | ctrans }}/{{ '金额' | ctrans }}/{{ '流水号' | ctrans }}"> <button class="interior" onclick="seeCardAmountRecords();" type="button">{{ '立即搜索' | ctrans }}</button></div>
+        </div>
+        <div class="zd-recond">
+            <table class="table" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="name">{{ '全部分类：' | ctrans }}</td>
+                    <td colspan="4">
+                        <select class="w2 fl" name="CardList" id="">
+                            <option value="0">{{ '请选择查询' | ctrans }}</option>
+                            <option value="1001">{{ '出入金记录' | ctrans }}</option>
+                            {#{% if data.WEB.cash_wallet_enable=='1' %}#}
+                            {#<option value="1002">{{ '储蓄账户金额记录' | ctrans }}</option>#}
+                            {#{% endif %}#}
+                            {% for account in data.tradlist %}
+                                <option value="{{account.uklogin }}">{{account.login }}{{ '-交易账户' | ctrans }}</option>
+                            {% endfor %}
+                            {% for account in data.commission %}
+                                <option value="{{account.uklogin }}">{{account.login }}{{ '-佣金账户' | ctrans }}</option>
+                            {% endfor %}
+                            {#{% for account in data.withlist %}#}
+                                {#<option value="{{account.uklogin }}">{{account.login }}{{ '-投资账户' | ctrans }}</option>#}
+                            {#{% endfor %}#}
+                        </select>
+                    </td>
+                    <td class="name">{{ '金额区间：' | ctrans }}</td>
+                    <td colspan="3"><input type="text" name="amount1" placeholder="{{ '请输入最低金额' | ctrans }}">&nbsp;&nbsp;-&nbsp;&nbsp;<input type="text" name="amount2" placeholder="{{ '请输入最高金额' | ctrans }}" ></td>
+                    <td><button class="search interior" onclick="seeCardAmountRecords(this);"  type="button">{{ '搜索' | ctrans }}</button></td>
+                </tr>
+            </table>
+            <table class="zd-table">
+                    <tr class="ttop">
+                    {#<td width="59"><input class="checkbox" type="checkbox"></td>#}
+                    {#<td colspan="4">{{ '全选' | ctrans }}</td>#}
+                    <td>
+                        <div class="page fr" style="padding: 0;">
+                            <div class="fr "> <a href="javascript:void(0);" class="Previouspage " onclick="seeCardAmountRecords(this);">{{ '上一页' | ctrans }}</a></div>
+                        <div class="fr"><a href="javascript:void(0);" class="nextpage " onclick="seeCardAmountRecords(this);">{{ '下一页' | ctrans }}</a></div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <table class="zd-table  thead01" cellpadding="0" cellspacing="0">
+                <tr class="thead ">
+                    <td width="59"></td>
+                    <td>{{ '日期/时间' | ctrans }}</td>
+                    <td>{{ '对象' | ctrans }}</td>
+                    <td>{{ '事件' | ctrans }}</td>
+                    <td>{{ '金额(USD)' | ctrans }}</td>
+                    <td>{{ '流水号' | ctrans }}</td>
+                    <td>{{ '状态' | ctrans }}</td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+    {#{% if data.WEB.cash_wallet_enable=='1' %}#}
+    {#余额转入#}
+    {#<div class="main-cont" style="display: none;">#}
+        {#<div class="mian-title">{{ '余额自动转入' | ctrans }} <i>{{ '处理账户与账户之间的资金流转' | ctrans }}</i></div>#}
+        {#<div class="transfer">#}
+            {#<form id="dealshift" action="{{ asset('/user/auto/states') }}" onsubmit="manageChangeInto(this);return false">#}
+                {#<table cellpadding="0" cellspacing="0">#}
+                    {#<tr>#}
+                        {#<td class="name">{{ '账户余额：' | ctrans }}</td>#}
+                        {#<td colspan="3" class="money"><span>${{ param.balance }}</span></td>#}
+                    {#</tr>#}
+                    {#<tr>#}
+                        {#<td class="name">{{ '当前状态：' | ctrans }}</td>#}
+                        {#<td colspan="3">#}
+                            {#<label for="male">#}
+                                {#{% autoescape false %}#}
+                                    {#{{ DealAccount.autoAccount }}#}
+                                {#{% endautoescape %}#}
+                            {#</label>#}
+                        {#</td>#}
+                    {#</tr>#}
+                    {#<tr>#}
+                        {#<td class="name " >{{ '状态控制:' | ctrans }}</td>#}
+                        {#<td style="width: 286px">#}
+                            {#<input class="w1" value="on" name="states"{% if  DealAccount.status==1 %}{{ 'checked' }}{% endif %} type="radio" />#}
+                            {#<label for="male2">{{ '开启' | ctrans }}</label>#}
+                            {#<input class="w1" value="off" name="states"{% if  DealAccount.status==0 %}{{ 'checked' }}{% endif %} type="radio" />#}
+                            {#<label for="male2">{{ '关闭' | ctrans }}</label>#}
+                        {#</td>#}
+                    {#</tr>#}
+                    {#<tr>#}
+                        {#<td class="name " >{{ '余额自动转入:' | ctrans }}</td>#}
+                        {#<td style="width: 286px">#}
+                            {#<select class="w1 fl" name="intobankcard" id="">#}
+                                {#<option>{{ '请选择收款方式' | ctrans }}</option>#}
+                                {#{% for accounts in DealAccount.account %}<option value="{{accounts.uklogin }}">{{accounts.login }}</option>{% endfor %}#}
+                            {#</select>#}
+                        {#</td>#}
+                    {#</tr>#}
+                    {#<tr>#}
+                        {#<td colspan="4" style="text-align: center;"><button class="button" type="submit" id="dealbegin">{{ '提交' | ctrans }}</button></td>#}
+                    {#</tr>#}
+                {#</table>#}
+            {#</form>#}
+        {#</div>#}
+    {#</div>#}
+    {#{% endif %}#}
+</div>
+{% endblock %}

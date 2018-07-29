@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>error</title>
+    <link rel="stylesheet" href="{{ asset('public/ccount/css/layer.css') }}">
+    <script src="{{ asset('public/ccount/js/jquery-1.11.1.min.js') }}"></script>
+    <script src="{{ asset('public/ccount/js/layer.js') }}"></script>
+</head>
+{#<form action="{{ asset('/upload/copy') }}" method="post" enctype="multipart/form-data">#}
+{#<input type="file" name="copy"> <input type="submit" value="提交">#}
+{#</form>#}
+<body>
+
+
+</body>
+<script>
+    layer.open({
+        type: 1,
+        skin: 'layui-layer-rim', //加上边框
+        area: ['420px', '170px'], //宽高
+        closeBtn:0,
+        content: '<div style="width: 300px;height: 100px;margin: 0 auto"> <p style="text-align: center;line-height:75px;">{{ rows.msg }}<a href="{{asset("/form/register_real")}}" style="color:red;text-decoration: none;">{{"亲,请重新注册"}}</a></p> </div>'
+    });
+
+</script>
+</html>

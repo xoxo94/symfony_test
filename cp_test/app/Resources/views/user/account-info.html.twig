@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ '合作伙伴详情' | ctrans }}</title>
+    <link rel="stylesheet" href="{{ asset('public/ccount/css/enbed.css') }}">
+    <link rel="stylesheet" href="{{asset('public/ccount/css/common.css') }}">
+    <script src="{{ asset('public/ccount/js/jquery-1.11.1.min.js') }}"></script>
+    <script src="{{ asset('public/ccount/js/layer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/user/partner.js') }}"></script>
+</head>
+<body>
+
+<!-- 合作伙伴详情-->
+<div class="layy" >
+    <div class="lay-box" style="width: 100%;">
+        <div class="partner">
+            <div class="link3 linkno">
+                <div class="l1 fl">
+					<div class="nickname">{{ data.contact }}</div>
+					<div class="balance">{{ data.balance }}</div>
+				</div>
+                <table class="fr frt" cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <td class="ti"><p>{{ '入金' | ctrans }}</p><span>{{ data.totalDep }}$</span></td>
+                            <td><p>{{ '出金' | ctrans }}</p><span>{{ data.totalWdr }}$</span></td>
+                            <td><p>{{ '交易量' | ctrans }}</p><span>{{ data.totalVolume }} Lots</span></td>
+                            <td><p>{{ '佣金' | ctrans }}</p><span class="minus">{{ data.totalProfitPool }}$</span></td>
+                            <td><p>{{ '返佣' | ctrans }}</p><span>{{ data.totalRebate }}$</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="ulli">
+                <ul>
+                    <li onclick="showDetails.showHouse(this,0)" action="/user/transaction/details/house">{{ '仓位情况' | ctrans }}</li>
+                    <li class="on" onclick="showDetails.showDepWdr(this,0)" action="/user/transaction/details/depwdr">{{ '出入金情况' | ctrans }}</li>
+                    <li onclick="showDetails.showRebate(this,0)" action="/user/transaction/details/rebate">{{ '返佣情况' | ctrans }}</li>
+                </ul>
+            </div>
+
+            <div class="link4 pb details" style="display: none;">
+                <div class="ents">{{ '仓位情况' | ctrans }}</div>
+                <table class="thead" cellpadding="0" cellspacing="0" style="text-align: left;">
+                    <tr>
+                        <td width="12%">{{ '交易账号' | ctrans }}</td>
+                        <td width="10%">{{ '订单号' | ctrans }}</td>
+                        <td width="15%">{{ '交易品种' | ctrans }}</td>
+                        <td width="17%">{{ '开仓时间' | ctrans }}</td>
+                        <td width="14%">{{ '开仓价' | ctrans }}</td>
+                        <td width="10%">{{ '持仓时间' | ctrans }}</td>
+                        <td width="12%">{{ '交易量(手)' | ctrans }}</td>
+                        <td width="10%">{{ '获利' | ctrans }}</td>
+                    </tr>
+                </table>
+                <table class="tbody" cellpadding="0" cellspacing="0" style="text-align: left;"></table>
+            </div>
+
+            <div class="link4 pb details" style="display: none;">
+                <div class="ents">{{ '出入金情况' | ctrans }}</div>
+                <table class="thead" cellpadding="0" cellspacing="0" style="text-align: left;">
+                    <tr>
+                        <td width="25%">{{ '时间' | ctrans }}</td>
+                        <td width="25%">{{ '类型' | ctrans }}</td>
+                        <td width="25%">{{ '方式' | ctrans }}</td>
+                        <td width="25%">{{ '金额' | ctrans }}</td>
+                    </tr>
+                </table>
+                <table class="tbody" cellpadding="0" cellspacing="0" style="text-align: left;"></table>
+            </div>
+
+            <div class="link4 pb details" style="display: none;" >
+                <div class="ents">{{ '返佣情况' | ctrans }}</div>
+                <table class="thead" cellpadding="0" cellspacing="0" style="text-align: left;">
+                    <tr>
+                        <td width="20%">{{ '时间' | ctrans }}</td>
+                        <td width="20%">{{ '订单号' | ctrans }}</td>
+                        <td width="20%">{{ '操作账号' | ctrans }}</td>
+                        <td width="20%">{{ '返佣' | ctrans }}</td>
+                        <td width="20%">{{ '返佣类型' | ctrans }}</td>
+                    </tr>
+                </table>
+                <table class="tbody" cellpadding="0" cellspacing="0" style="text-align: left;"></table>
+            </div>
+        </div>
+    </div>
+    <div id="top">top</div>
+</div>
+<script type="text/javascript">
+    var showDetails={
+        onLoad:function(m,eq,cfn){
+            var index=layer.load(0,{shade: [0.3,'#000']});
+            $('div.details').hide().eq(eq).show();
+            $.ajax({
+                url:$(m).attr('action'),
+                data:{id:'{{ data.userid }}'},
+                cache:false,
+                timeout:120000,
+                dataType:'json',
+                success:function(result){
+                    layer.close(index);
+                    if(result.code){
+                        cfn(m,eq,result.data);
+                    }else{
+                        layer.alert(result.msg,{btn: ["{{ '确定' | ctrans }}"]});
+                    }
+                },error:function(){
+                    layer.close(index);
+                    layer.alert('SYSTEM ERROR',{btn: ["{{ '确定' | ctrans }}"]});
+                }
+            });
+        },showHouse:function(m){
+            try{
+            showDetails.onLoad(m,0,function(m,index,data){
+                var v_html='';if(data.length==0){v_html='<tr><td colspan="8" style="text-align: center;">{{ '无数据...' | ctrans }}</td></tr>';}
+                for(var i=0;i<data.length;i++){
+                    v_html+='<tr>' +
+                        '<td width="10%" style="text-indent: 20px">'+data[i].Login+'</td>' +
+                        '<td width="10%" style="text-indent: 20px">'+data[i].OrderId+'</td>' +
+                        '<td width="15%" style="text-indent: 20px">'+data[i].Symbol+'</td>' +
+                        '<td width="17%" style="text-indent: 20px">'+data[i].OpenTime+'</td>' +
+                        '<td width="13%" style="text-indent: 20px">'+data[i].OpenPrice+'</td>' +
+                        '<td width="10%" style="text-indent: 20px">'+data[i].TotalTime+'</td>' +
+                        '<td width="12%" style="text-indent: 20px">'+data[i].Volume++/100+'</td>' +
+                        '<td width="10%" style="text-indent: 20px">'+data[i].Profit+'</td>' +
+                        '</tr>';
+                }
+                $('div.details').eq(index).find('table.tbody').html(v_html);
+            });}catch (e){}
+        },showDepWdr:function(m){
+            try{
+                showDetails.onLoad(m,1,function(m,index,data){
+                    var v_html='';if(data.length==0){v_html='<tr><td colspan="4" style="text-align: center;">{{ '无数据...' | ctrans }}</td></tr>';}
+                    for(var i=0;i<data.length;i++){
+                        v_html+='<tr>' +
+                            '<td width="25%">'+data[i].time+'</td>' +
+                            '<td width="25%">'+data[i].type+'</td>' +
+                            '<td width="25%">'+data[i].method+'</td>' +
+                            '<td width="25%">'+data[i].amount+'</td>' +
+                            '</tr>';
+                    }
+                    $('div.details').eq(index).find('table.tbody').html(v_html);
+                });}catch (e){}
+        },showRebate:function(m){
+            try{
+                showDetails.onLoad(m,2,function(m,index,data){
+                    var v_html='';if(data.length==0){v_html='<tr><td colspan="5" style="text-align: center;">{{ '无数据...' | ctrans }}</td></tr>';}
+                    for(var i=0;i<data.length;i++){
+                        v_html+='<tr><td width="20%">'+data[i].time+'</td>' +
+                            '<td width="20%">'+data[i].orderno+'</td>' +
+                            '<td width="20%">'+data[i].login+'</td>' +
+                            '<td width="20%">'+data[i].rebate+'</td>' +
+                            '<td width="20%">'+data[i].method+'</td>' +
+                            '</tr>';
+                    }
+                    $('div.details').eq(index).find('table.tbody').html(v_html);
+                });}catch (e){}
+        }
+    }
+	$(".partner .ulli ul li:eq(1)").click();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,664 @@
+var accounts={
+    onFormSubmit:function(f){
+        var index = layer.load(0, {shade: [0.3,'#000']}); //0代表加载的风格，支持0-2
+        var v_data=$(f).serialize();//获取表单值
+        var v_action=$(f).attr('action');//提交地址
+        $.ajax({
+            url:v_action,
+            data:v_data,
+            cache:false,
+            timeout:120000,
+            dataType:'json',
+            success:function(obj){
+                layer.close(index);
+                  var msg='{{ "新增账户成功正在审核期间....." | ctrans }}';
+                {% if not attribute(data.WEB,"business_account_audit") is defined or data.WEB.business_account_audit!='1' %}
+                     msg='{{ "新增账户成功" | ctrans }}'
+                {% endif %}
+                if(obj.code){
+                    layer.alert(msg, {
+                        icon:6,
+                        btn: ["{{ '确定' | ctrans }}"],
+                        resize:false,
+                        title:'{{ '信息提示' | ctrans }}',
+                        closeBtn: 0,//关闭按钮
+                        yes:function () {
+                            parent.layer.closeAll();
+                        }
+                    });
+                    document.location.reload();
+                }else{
+                    layer.alert(obj.msg,{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]});
+                }
+            },error:function(){
+                layer.close(index);
+                layer.alert('SYSTEM ERROR',{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]});
+            }
+        });
+    },
+    fund: {
+        add: function () {
+            var formID = 'F' + parseInt(Math.random() * 10000000);//给form表单赋值id
+            layer.confirm(
+                '<div class="lay" scroll="no" >' +
+                '    <div class="lay-box adds">' +
+                '        <div class="cont fund">' +
+                '            <div class="type">{{ '基金账户' | ctrans }}</div>' +
+                '            <form id="' + formID + '" action="/add/fund/account" name="addform" onsubmit="accounts.onFormSubmit(this);return false;" class="from">' +
+                '                <ul>' +
+                '                    <li>' +
+                '                        <p>{{ '昵称：' | ctrans }}</p><input type="text" name="nickname" placeholder="{{ '输入昵称' | ctrans }}" onblur="check()" class="name">' +
+                '                    </li>' +
+                '                    <li>' +
+                '                        <p>{{ '观察者密码：' | ctrans }}</p><input type="password" name="invalpass" placeholder="{{ '输入观察者密码' | ctrans }}" onblur="check()" class="name">' +
+                '                    </li>' +
+                '                    <li>' +
+                '                        <p>{{ '杠杆：' | ctrans }}</p><select name="lever" class="lever">' +
+                '                            {% for item in listLever %}' +
+                '                                <option value="{{ item.name }}">{{ item.name }}</option>' +
+                '                            {% endfor %}' +
+                '                        </select>' +
+                '                    </li>' +
+                '                    <li>' +
+                '                        <p> {{ '验证码：' | ctrans }}</p><input type="text" placeholder="{{ '输入验证码' | ctrans }}" onblur="check()" name="code" class="yzm">' +
+                '                        <img src="{{ asset('/captcha/window') }}" onclick="this.src=\'/captcha/window?a=\'+Math.random();">' +
+                '                    </li>' +
+                '                </ul>' +
+                '            </form>' +
+                '        </div>' +
+                '    </div>' +
+                '</div>',
+                {
+                    btn: ['{{ '确认' | ctrans }}', '{{ '取消' | ctrans }}'],
+                    title: '{{ '新增基金账户' | ctrans }}',
+                    area: ['450px', '270px'],
+                    resize: false,
+                    closeBtn: 1, //显示关闭按钮
+                    shadeClose: false //关闭点击遮罩关闭
+                }, function () {
+                    function check() {
+                        if (addform.nickname.value == "") {
+                            layer.alert("{{ '请输入输入昵称！' | ctrans }}",{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]});
+                            return false;
+                        }
+                        if (addform.invalpass.value == "") {
+                            layer.alert("{{ '请输入输入观察者密码！' | ctrans }}",{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]})
+                            return false;
+                        }
+                        if (addform.captcha.value == "") {
+                            layer.alert("{{ '请输入验证码' | ctrans }}！",{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]})
+                            return false;
+                        }
+                    }
+                    $('#' + formID).submit();
+                }
+            );
+        },update:function(m){
+            var data=$.parseJSON($(m).attr('data'));
+            var formID='F'+parseInt(Math.random()*10000000);//给form表单赋值id
+            layer.confirm(
+                '<div class="lay-box funds">' +
+                '    <div class="cont mt4nosa">' +
+                '        <div class="type fund">{{ '基金账户' | ctrans }}</div>' +
+                '        <form id="'+formID+'" action="/user/fund/setting" name="updateform" onsubmit="accounts.onFormSubmit(this);return false;" class="from">' +
+                '        <div class="from">' +
+                '            <table id="edit_water_box">' +
+                '                <tbody>' +
+                '                <tr>' +
+                '                    <td>{{ '基金账户:' | ctrans }}</td>' +
+                '                    <td><input class="fund" type="hidden" id="fondno"  value="'+data[0]+'" name="uklogin" >'+data[1]+'</td>' +
+                '                </tr>' +
+                '                <tr>' +
+                '                    <td>{{ '社区昵称' | ctrans }}:</td>' +
+                '                    <td>' +
+                '                        <span>'+data[2]+'</span>' +
+                '                    </td>' +
+                '                </tr>' +
+                '                <tr>' +
+                '                    <td>{{ '提成比例:' | ctrans }}</td>' +
+                '                    <td><input type="text" name="rebate" id="rebate" placeholder="{{ '请输入1~99之间的整数' | ctrans }}" value="'+data[3]+'"></td>' +
+                '                </tr>' +
+                '                <tr>' +
+                '                    <td>{{ '受理新的投资:' | ctrans }}</td>' +
+                '                    <td>' +
+                '                        <div style="float: left;" class="selectbox">' +
+                '                            <select class="isnewwith" name="isnewWith">' +
+                '                                <option value="0" '+(data[4]=='1' ? '':'selected')+'>{{ '否' | ctrans }}</option>' +
+                '                                <option value="1" '+(data[4]=='1' ? 'selected':'')+'>{{ '是' | ctrans }}</option>' +
+                '                            </select>' +
+                '                        </div>' +
+                '                    </td>' +
+                '                </tr>' +
+                '                <tr>' +
+                '                    <td>{{ '公开操盘数据:' | ctrans }}</td>' +
+                '                    <td>' +
+                '                        <div style="float: left;" class="selectbox">' +
+                '                            <select class="ispubdata" name="showHistory" >' +
+                '                                <option value="0" '+(data[5]=='1' ? '':'selected')+'>{{ '隐藏' | ctrans }}</option>' +
+                '                                <option value="1" '+(data[5]=='1' ? 'selected':'')+'>{{ '显示' | ctrans }}</option>' +
+                '                            </select>' +
+                '                        </div>' +
+                '                    </td>' +
+                '                </tr>' +
+                '                <tr>' +
+                '                    <td>{{ '公开打开订单:' | ctrans }}</td>' +
+                '                    <td>' +
+                '                        <div style="float: left;" class="selectbox">' +
+                '                            <select class="ispubdata_now" name="showCurrent" >' +
+                '                                <option value="0" '+(data[6]=='1' ? '':'selected')+'>{{ '隐藏' | ctrans }}</option>' +
+                '                                <option value="1" '+(data[6]=='1' ? 'selected':'')+'>{{ '显示' | ctrans }}</option>' +
+                '                            </select>' +
+                '                        </div>' +
+                '                    </td>' +
+                '                </tr>' +
+                '                <tr>' +
+                '                    <td>{{ '自动提取利润池:' | ctrans }}</td>' +
+                '                    <td>' +
+                '                        <div style="float: left;" class="selectbox">' +
+                '                            <select class="autobear" name="autoSeize" >' +
+                '                                <option value="0" '+(data[7]=='1' ? '':'selected')+'>{{ '手动提取' | ctrans }}</option>' +
+                '                                <option value="1" '+(data[7]=='1' ? 'selected':'')+'>{{ '自动提取' | ctrans }}</option>' +
+                '                            </select>' +
+                '                        </div>' +
+                '                    </td>' +
+                '                </tr>' +
+                '                <tr>' +
+                '                    <td>{{ '验证码:' | ctrans }}</td>' +
+                '                    <td id="window">' +
+                '                        <input type="text" id="addcardcheckcode" name="code" placeholder="{{ '请输入验证码' | ctrans }}">' +
+                '                        <img src="{{ asset('/captcha/window') }}" onclick="this.src=\'/captcha/window?b=\'+Math.random();">' +
+                '                    </td>' +
+                '                </tr>' +
+                '             </tbody>' +
+                '           </table>' +
+                '        </div>' +
+                '     </form>' +
+                '   </div>' +
+                '</div>',
+                {
+                    btn: ['{{ '确认' | ctrans }}','{{ '取消' | ctrans }}'],
+                    title:'{{ '基金账户设置' | ctrans }}',
+                    area: ['450px', '450px'],
+                    resize: false,
+                    closeBtn: 1, //显示关闭按钮
+                    shadeClose: false //关闭点击遮罩关闭
+                },function () {
+                    function check() {
+                        if (addform.nickname.value == "") {
+                            layer.alert("{{ '请输入输入昵称！' | ctrans }}",{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]});
+                            return false;
+                        }
+                        if (addform.invalpass.value == "") {
+                            layer.alert("{{ '请输入输入观察者密码！' | ctrans }}",{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]})
+                            return false;
+                        }
+                        if (addform.vcode.value == "") {
+                            layer.alert("{{ '请输入验证码！' | ctrans }}",{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]})
+                            return false;
+                        }
+                    }
+                    $('#' + formID).submit();
+                }
+            )
+        },profitOutShow:function(fundno) {
+                layer.confirm('<p>{{ '利润池用于暂存您基金账户的盈利分红，系统会定时检测您名下的基金账户是否清仓，如果清仓，将会自动清空利润池并把其中的余额全部转入到您的储蓄账户中。' | ctrans }}</p>'+
+                    '<p style="color: red">{{ '同时，您也能在清仓后手动转出利润，是否尝试操作？' | ctrans }}</p>',
+                    //+'<p>验证码:&nbsp;<input type="text" placeholder="请输入验证码"  class="yzm code">&nbsp;&nbsp;<img src="/captcha/window" style="vertical-align:middle;height:30px;" onclick="this.src=\'/captcha/window?a=\'+Math.random();"></p>',
+                    {btn: ['{{ '确认' | ctrans }}','{{ '取消' | ctrans }}'],title:'{{ '利润转出' | ctrans }}'},function(){
+                        var index = layer.load(0, {shade: [0.3,'#000']}); //0代表加载的风格，支持0-2
+                        $.ajax({
+                            url: "/user/profit/out",
+                            type:"POST",
+                            data:{'fundno':fundno},
+                            dataType:"json",
+                            success: function(obj){
+                                layer.close(index);
+                                if(obj.code){
+                                    layer.msg('{{ '利润池提取成功,本次成功提取金额:' | ctrans }}$'+obj.data, {
+                                        time: 20000, //20s后自动关闭
+                                        btn: ["{{ '确定' | ctrans }}"]
+                                    });
+                                }else{
+                                    layer.alert(obj.msg,{icon:0,title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]});
+                                }
+                            },error:function () {
+                                layer.close(index);
+                                layer.alert("{{ '网络错误' | ctrans }}",{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]});
+                                return false;
+                            }
+                        });
+                    });
+            }
+    },
+    trad:{
+        add:function(){
+            var formID='F'+parseInt(Math.random()*10000000);//给form表单赋值id
+            layer.confirm(
+                '<div class="lay" >' +
+                '    <div class="lay-box adds">' +
+                '        <div class="cont deal">' +
+                '            <div class="type">{{ '交易账户' | ctrans }}</div>' +
+                '            <form id="'+formID+'" action="/add/deal/account" name="updateform" onsubmit="accounts.onFormSubmit(this);return false;" class="from">' +
+                '                <ul class="dealul" >' +
+                '                    <li>' +
+                '                        <p>{{ '账户密码：' | ctrans }}</p><input type="password" name="pass"   placeholder="{{ '输入密码' | ctrans }}" class="name pass">' +
+                '                    </li>' +
+                '                    <li>' +
+                '                        <p>{{ '杠杆：' | ctrans }}</p>' +
+                '                        <select name="lever" class="lever">' +
+                '                            {% for item in listLever %}' +
+                '                                <option value="{{ item.name }}">{{ item.name }}</option>' +
+                '                            {% endfor %}' +
+                '                        </select>' +
+                '                    </li>' +
+                '                    <li>' +
+                '                        <p> {{ '验证码：' | ctrans }}</p><input type="text" placeholder="{{ '输入验证码' | ctrans }}" name="code" class="yzm code">' +
+                '                        <img src="{{ asset('/captcha/window') }}" onclick="this.src=\'/captcha/window?d=\'+Math.random();" alt="{{ '看不清重新加载' | ctrans }}">' +
+                '                    </li>' +
+                '                </ul>' +
+                '            </form>' +
+                '        </div>' +
+                '    </div>' +
+                '</div>',
+                {
+                    btn: ['{{ '确认' | ctrans }}','{{ '取消' | ctrans }}'],
+                    title:'{{ '新增交易账户' | ctrans }}',
+                    area: ['450px', '270px'],
+                    resize: false,
+                    closeBtn: 1, //显示关闭按钮
+                    shadeClose: false //关闭点击遮罩关闭
+                },function () {
+                    $('#' + formID).submit();
+                }
+            )
+        }
+    },
+    pass:{
+      update:function (uklogin) {
+          var formID='F'+parseInt(Math.random()*10000000);//给form表单赋值id
+        var aler=layer.confirm(
+              '<div class="lay" >' +
+              '    <div class="lay-box adds">' +
+              '        <div class="cont deal">' +
+              '            <div>{{ '确认修改' | ctrans }}？</div>' +
+              '            <form id="'+formID+'" action="/user/password/change" name="updateform"  class="from">' +
+              '                <input  style="display:none" type="password" name="login" value="'+uklogin+'">'+
+              '            </form>' +
+              '        </div>' +
+              '    </div>' +
+              '</div>',
+              {
+                  btn: ['{{ '确认' | ctrans }}','{{ '取消' | ctrans }}'],
+                  title:'{{ '修改交易密码' | ctrans }}',
+                  area: ['100px', '150px'],
+                  resize: false,
+                  closeBtn: 1, //显示关闭按钮
+                  shadeClose: false //关闭点击遮罩关闭
+              },function () {
+                  {#$('#' + formID).submit();#}
+                  $.ajax({
+                      url: "/user/password/change",
+                      type:"get",
+                      data:{'uklogin':uklogin},
+                      dataType:"json",
+                      success: function(obj){
+                          layer.close(aler);
+                          if(obj.code){
+                              layer.msg("{{ '交易密码修改成功,请F5刷新页面' | ctrans }}", {
+                                  time: 20000, //20s后自动关闭
+                                  btn: ["{{ '确定' | ctrans }}"]
+                              });
+                          }else{
+                              layer.close(aler);
+                              layer.alert(obj.msg,{icon:0,title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]});
+                          }
+                      },error:function () {
+                          layer.close(aler);
+                          layer.alert("{{ '网络错误' | ctrans }}",{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]});
+                          return false;
+                      }
+                  });
+
+
+
+
+              }
+          )
+      }  
+    },
+    nval:{
+        update:function (uklogin) {
+
+            var formID='F'+parseInt(Math.random()*10000000);//给form表单赋值id
+             var aler=layer.confirm(
+                '<div class="lay" >' +
+                '    <div class="lay-box adds">' +
+                '        <div class="cont deal">' +
+                '            <div>{{ '确认修改'| ctrans}}？</div>' +
+                '            <form id="'+formID+'" action="/user/investor/password/change" name="updateform"  class="from">' +
+                '                <input  style="display:none" type="password" name="login" value="'+uklogin+'">'+
+                '            </form>' +
+                '        </div>' +
+                '    </div>' +
+                '</div>',
+                {
+                    btn: ['{{ '确认' | ctrans }}','{{ '取消' | ctrans }}'],
+                    title:'{{ '修改观摩密码' | ctrans }}',
+                    area: ['100px', '150px'],
+                    resize: false,
+                    closeBtn: 1, //显示关闭按钮
+                    shadeClose: false //关闭点击遮罩关闭
+                },function () {
+                    $.ajax({
+                        url: "/user/investor/password/change",
+                        type:"get",
+                        data:{'uklogin':uklogin},
+                        dataType:"json",
+                        success: function(obj){
+                            layer.close(aler);
+                            if(obj.code){
+                                layer.msg('默认观摩密码修改成功,请F5刷新页面', {
+                                    time: 20000, //20s后自动关闭
+                                    btn: ["{{ '确定' | ctrans }}"]
+                                });
+                            }else{
+                                layer.close(aler);
+                                layer.alert(obj.msg,{icon:0,title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]});
+                            }
+                        },error:function () {
+                            layer.close(aler);
+                            layer.alert("{{ '网络错误' | ctrans }}",{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]});
+                            return false;
+                        }
+                    });
+
+                }
+            )
+        }
+    },
+    wiht:{
+        add:function(){
+            var formID='F'+parseInt(Math.random()*10000000);//给form表单赋值id
+            layer.confirm(
+                '<div class="lay" >' +
+                '    <div class="lay-box adds">' +
+                '        <div class="cont invest" >' +
+                '            <div class="type">{{ '投资账户' | ctrans }}</div>' +
+                '            <form id="'+formID+'" action="/add/invest/account" name="updateform" onsubmit="accounts.onFormSubmit(this);return false;" class="from">' +
+                '                <ul class="investul" >' +
+                '                    <li>' +
+                '                        <p>{{ '账户密码：' | ctrans }}</p><input type="password" name="pass" placeholder="{{ '输入密码' | ctrans }}" class="name pass">' +
+                '                    </li>' +
+                '                    <li>' +
+                '                        <p> {{ '验证码：' | ctrans }}</p><input type="text" placeholder="{{ '输入验证码' | ctrans }}" name="code" class="yzm code">' +
+                '                        <img src="{{ asset('/captcha/window') }}" onclick="this.src=\'/captcha/window?d=\'+Math.random();" alt="{{ '看不清重新加载' | ctrans }}">' +
+                '                    </li>' +
+                '                </ul>' +
+                '            </form>' +
+                '        </div>' +
+                '    </div>' +
+                '</div>',
+                {
+                    btn: ['{{ '确认' | ctrans }}','{{ '取消' | ctrans }}'],
+                    title:'{{ '新增投资账户' | ctrans }}',
+                    area: ['450px', '270px'],
+                    resize: false,
+                    closeBtn: 1, //显示关闭按钮
+                    shadeClose: false //关闭点击遮罩关闭
+                },function () {
+                    $('#' + formID).submit();
+                }
+            )
+        },
+
+        update:function(m){
+            var data=$.parseJSON($(m).attr('data'));
+            var formID='F'+parseInt(Math.random()*10000000);//给form表单赋值id
+            var html="";
+            var selected="";
+            html+='<div class="lay">'+
+                '   <form id="'+formID+'" action="/user/invest/setting"  name="updateform" onsubmit="accounts.onFormSubmit(this);return false;" class="lay-box investfrom">'  +
+                '      <div class="cont set">' +
+                '      <div class="type">{{ '投资账户' | ctrans }}</div>' +
+                '          <div class="from withedit">' +
+                '              <ul>' +
+                '                  <li class="updateli">' +
+                '                      <p>{{ '投资账户：' | ctrans }}　'+data[0]+'</p>  ' +
+                '                      <input class="fund" type="hidden" value="'+data[1]+'" name="investno" >'+
+                '                  </li>' +
+                '                  <li>' +
+                '                      <p>{{ '基金账户：' | ctrans }}</p>' +
+                '                      <select name="fundcard" id="">' +
+                '                          <option value="-1">{{ '请选择基金账户...' | ctrans }}</option>' +
+                '                          <option value="0">{{ '暂时不跟基金账户' | ctrans }}</option>';
+                                        {% for rows in fundAll %}
+                                        var uklogin= '{{ rows.uklogin }}'
+                                        if( uklogin === data[2]){ selected="selected"; }else (selected="")
+                                        html+=  '<option   value="{{ rows.uklogin }}" '+selected+' >{{ rows.login }} [ /{{ rows.nickname }}/{{ rows.rebate }} %]</option>';
+                                            {% endfor %}
+            html+='                      </select>' +
+                '                   </li>' +
+                '                   <li>' +
+                '                     <p>{{ '验证码：' | ctrans }}</p>' +
+                '                     <input type="text" name="code" placeholder="{{ '请输入验证码' | ctrans }}" class="yzm">' +
+                '                     <img src="{{ asset('/captcha/window') }}"  alt="" onclick="this.src=\'/captcha/window?a=\'+Math.random();">' +
+                '                 </li>' +
+                '               </ul>' +
+                '           </div>' +
+                '       </div>' +
+                '   </form>'+
+                '</div>'
+            layer.confirm(html,
+                {
+                    btn: ['{{ '确认' | ctrans }}','{{ '取消' | ctrans }}'],
+                    title:'{{ '投资账户设置' | ctrans }}',
+                    area: ['450px', '270px'],
+                    resize: false,
+                    closeBtn: 1, //显示关闭按钮
+                    shadeClose: false //关闭点击遮罩关闭
+                },function () {
+                    $('#' + formID).submit();
+                }
+            )
+        }
+    }
+};
+
+
+/**
+ * 内部转账
+ */
+function manageAmount(m) {
+   
+    if ($("select[name='bankcard']").val() == false) {
+        layer.alert("{{ '请选择账户' | ctrans }}",{btn: ["{{ '确定' | ctrans }}"] });
+        return false
+    }
+    var index = layer.load(0, {shade: [0.3,'#000']}); //0代表加载的风格，支持0-2
+    $.ajax({
+        type: "POST",
+        url: "/user/book/transfer",
+        data: $(m).serialize(),
+        dataType:"json",
+        success: function(obj){
+            layer.close(index);
+            if(obj.code===false){
+                layer.alert(obj.msg,{
+                    icon:5,
+                    closeBtn: 0, //关闭按钮
+                    btn: ["{{ '确定' | ctrans }}"],
+                    resize:false,
+                    title:'{{ '信息提示' | ctrans }}'
+                });
+            }else {
+                layer.alert("{{ '提交成功' | ctrans }}", {
+                    icon:6,
+                    resize:false,
+                    btn: ["{{ '确定' | ctrans }}"],
+                    title:'{{ '信息提示' | ctrans }}',
+                    closeBtn: 0//关闭按钮
+                });
+                window.parent.location.reload()
+
+            }
+        }, error:function () {
+            layer.alert("{{ '网络错误' | ctrans }}",{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]});
+            layer.close(index);
+        }
+    });
+}
+
+
+
+
+
+/**
+* 内部转账记录
+*/
+function seeCardAmountRecords(m) {
+    var select=$("select[name='CardList']");
+    if(select.val()==0){
+        layer.alert("{{ '请选择正确的分类' | ctrans }}",{btn: ["{{ '确定' | ctrans }}"]});
+        return false;
+    }
+    var index = layer.load(0, {shade: [0.3,'#000']}); //0代表加载的风格，支持0-2
+    var  page=$(m).attr('page');
+    var data={'CardList':select.val(),"amountstart":$("input[name='amount1']").val(),
+        "amountend":$("input[name='amount2']").val(),"key":$("input[name='key']").val(),"page":page
+    };
+    var srt="<tr class='thead '>" +
+        "<td width='59'></td>" +
+        "<td>{{ '日期/时间' | ctrans }}</td>" +
+        "<td>{{ '对象' | ctrans }}</td>" +
+        "<td>{{ '事件' | ctrans }}</td>" +
+        "<td>{{ '金额' | ctrans }}(USD)</td>" +
+        "<td>{{ '流水号' | ctrans }}</td>" +
+        "<td>{{ '状态' | ctrans }}</td>" +
+        "</tr>";
+    $.ajax({
+        url: "/user/amount/records",
+        type:"get",
+        dataType:"json",
+        data:data,
+        success: function(obj){
+            var thead01=$(".thead01");
+            layer.close(index);
+
+            if(obj.code==false){
+                layer.alert(obj.msg,{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]})
+            }else {
+                thead01.html("");
+                if (obj.data.data.length == 0) {
+                    srt+= "<tr><td colspan='7' style='text-align: center'>{{ '暂无数据' | ctrans }}</td></tr>";
+                    thead01.html(srt);
+                    return false;
+                }
+
+                $(obj.data.data).each(function(k,v){
+                    srt+="<tr>" +
+                        "<td width='59'></td>" +
+                        "<td>"+v.addtime+"</td>" +
+                        "<td>"+v.from+"</td>" +
+                        "<td>"+v.uklogin+"</td>" ;
+                    srt+="<td><span>"+v.amount+"</span></td>";
+                    srt+="<td>"+v.orderno+"</td><td>"+v.status+"</td></tr>";
+                    //分页
+                    var  nextpage
+                    if (obj.data.thisPageNumber >= obj.data.totalPageNumber) {
+                        nextpage=obj.data.totalPageNumber;
+                    }else {
+                        nextpage=parseInt(obj.data.thisPageNumber)+1;
+                    }
+                    var  Previouspage
+                    if (obj.data.thisPageNumber <= 1) {
+                        Previouspage=obj.data.thisPageNumber;
+                    }else{
+                        Previouspage=parseInt(obj.data.thisPageNumber)-1;
+                    }
+                    $(".Previouspage").attr('page',Previouspage);
+                    $(".nextpage").attr('page',nextpage);
+                });
+                thead01.html(srt)
+            }
+        },
+        error:function () {
+            layer.alert("{{ '网络错误' | ctrans }}",{btn: ["{{ '确定' | ctrans }}"]});
+            layer.close(index);
+        }
+    });
+}
+
+
+
+$(function () {
+    /**
+     * 余额自动转入 点击事件
+     */
+    $(".auto").click(function () {
+        $('#motion').click()
+    });
+    //内部转账 样式
+    $("input[name='manage']").click(function () {
+        var manage = $(this).val();
+        if (manage === "in") {
+            $(".reserve01").css("display", "inline-block");
+            $(".reserve02").css("display", "none");
+            $(".arrows").css("display", "none");
+            $(".toaccount").css("display", "none");
+        }
+        if (manage === "out") {
+            $(".reserve01").css("display", "none");
+            $(".reserve02").css("display", "inline-block");
+            $(".arrows").css("display", "none");
+            $(".toaccount").css("display", "none");
+        }
+        if (manage === "other") {
+            $(".reserve01").css("display", "none");
+            $(".reserve02").css("display", "none");
+            $(".arrows").css("display", "inline-block");
+            $(".toaccount").css("display", "inline-block");
+
+        }
+    });
+
+    /**
+     * 余额转入
+     */
+    $('#btnDeal').click(function () {
+        var data={"pass":$(".pass").val(),"nickname": $(".nickname").val(),"code":$(".code").val(),'lever': $(".lever").val()};
+        function manageChangeInto(m) {
+            var index = layer.load(0, {shade: [0.3,'#000']}); //0代表加载的风格，支持0-2
+            $.ajax({
+                url: "/user/auto/states",
+                type: "POST",
+                dataType: "json",
+                data: $(m).serialize(),
+                success: function(obj){
+                    layer.close(index);
+                    if(obj.code){
+                        layer.msg('{{ '交易账户创建成功' | ctrans }}', {
+                            time: 20000, //20s后自动关闭
+                            btn: ["{{ '确定' | ctrans }}"]
+                        });
+                        window.parent.location.reload()
+                    }else{
+                        layer.alert(obj.msg+'');
+                        if(obj.code==false){
+                            layer.alert(obj.msg,{btn: ["{{ '确定' | ctrans }}"]})
+                        }else {
+                            layer.alert("{{ '成功' | ctrans }}",{
+                                yes:function () {
+                                    parent.layer.closeAll();
+                                    window.parent.location.reload()
+                                }
+                            })
+                        }
+                    }
+                },
+                error:function () {
+                    layer.alert("{{ '网络错误' | ctrans }}",{btn: ["{{ '确定' | ctrans }}"]})
+                }
+            });
+        }
+    });
+});

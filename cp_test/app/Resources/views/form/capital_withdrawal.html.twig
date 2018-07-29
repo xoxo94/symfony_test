@@ -1,0 +1,168 @@
+{% extends 'form/layout.html.twig' %}
+{% block content %}
+    {% if not attribute(data.MODULE,"system_not_write") is defined or data.MODULE.system_write!='1'%}
+        <form action="{{ asset('/capital/withdrawal/submit') }}" method="post" onsubmit="formInit.submit(this);return false;">
+            <div class="st-tabs">
+                <ul>
+                    <li class="on"><i>{{ '填写个人资料与入款信息' | ctrans }}</i></li>
+                    <li><i>{{ '检阅并递交' | ctrans }}</i></li>
+                    <li class="last"><i>{{ '完成' | ctrans }}</i></li>
+                </ul>
+            </div>
+            <div class="st-cont">
+                <div class="tab" style="display: block;">
+                    <table class="table" cellpadding="0"  cellspacing="0">
+                        <tr>
+                            <td class="st-title" colspan="4">A. {{ '出金信息' | ctrans }}</td>
+                        </tr>
+                        <input name="username"  class="w1 empty"  type="hidden" value="{{ data.username }}"/>
+                        <input name="nickname"  class="w1 empty"  type="hidden" value="{{ data.nickname }}"/>
+                        <input name="mobile"  class="w1 empty"  type="hidden" value="{{ data.mobile }}"/>
+                        <input name="email"  class="w1 empty"  type="hidden" value="{{ data.email }}"/>
+
+                        <tr>
+                            <td class="name">{{ '出金金额' | ctrans }}</td>
+                            <td class="input" colspan="3">
+                                {% if order.data is not empty %}
+                                    <input name="amount"  class="w8 empty amount" onkeyup="formInit.currency(this)" type="text" value="{{ order.data.0.amountUsd }}"/>
+                                    <span {% if currency!=[] %} class="exchang" {% endif %} ></span>
+                                {% else %}
+                                    <input name="amount"  class="w8 empty amount" onkeyup="formInit.currency(this)" type="text" />
+                                    <span {% if currency!=[] %} class="exchang" {% endif %} ></span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="name">{{ '收款币种' | ctrans }}</td>
+                            <td class="input" colspan="3">
+                                <select name="currency" id="test_checked" class="w8 empty" onclick="formInit.currency(this)">
+                                    {% if currency==[] %}
+                                        <option>{{ '暂无可选币种' | ctrans }}</option>
+                                    {% endif %}
+                                    {% for rows in  currency %}
+                                        <option exaout="{{ rows.exaout }}"  type="{{ rows.name }}" value="{{ rows.id }}">{{ rows.title | ctrans }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="name">{{ '出款账号' | ctrans }}</td>
+                            <td class="input" colspan="3">
+                                <div class="count-type " id="">
+                                    {#<select class="w3 fl mr10 empty" id="account_selected" name="outMethod" onchange="formInit.selectIntoMethodChange(this);">#}
+                                        {#{% if data.WEB.cash_wallet_enable=='1' %}#}
+                                        {#<option value="0">{{ '储蓄账号' | ctrans }}</option>#}
+                                        {#{% endif %}#}
+                                        {#<option value="1">{{ '交易账号' | ctrans }}</option>#}
+                                        {#<option value="4">{{ '佣金账号' | ctrans }}</option>#}
+                                    {#</select>#}
+                                    {#<span id="balance" style="display: none">{{ '储备金账户余额 :' | ctrans }} $ {{   data.userdata.balance }}</span>#}
+                                    <select name="mt4no" id="tradlist" class="w3 fl empty"  name="outMethod">
+                                        {% if data.mt4nos.tradlist is defined and data.mt4nos.tradlist!=[] %}
+                                            {% for item in data.mt4nos.tradlist%}
+                                                <option value="{{ item.uklogin }}">{{ item.login }}-{{ '交易账号' | ctrans }}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                        {% if data.mt4nos.commission is defined and data.mt4nos.commission!=[] %}
+                                            {% for item in data.mt4nos.commission %}
+                                                <option  value="{{ item.uklogin }}">{{ item.login }}-{{ '佣金账号' | ctrans }}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="name">{{ '收款方式' | ctrans }}</td>
+                            <td class="input" colspan="3">
+                                <select class="w3 payment empty" name="makeMethod" id="makeMethod_selected" onchange="formInit.selectOutMethodChange(this);">
+                                    <option selected="selected" value="">{{ '选择收款方式...' | ctrans }}</option>
+                                    <option value="wire">{{ '国际电汇' | ctrans }}</option>
+                                    <option value="ambank">{{ '大马银行' | ctrans }}</option>
+                                    <option value="unionpay">{{ '中国银联' | ctrans }}</option>
+                                    <option value="skrill" style="display:none;">Skrill</option>
+                                    <option value="paypal">Paypal</option>
+                                    <option value="neteller" style="display:none;">Neteller</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table" border="0" cellpadding="0" cellspacing="0"  >
+
+                    </table>
+                    <table  class="table " border="0" cellpadding="0" cellspacing="0" >
+                        <tr>
+                            {% if audit is not empty %}
+                                <td colspan="4" class="tac" style="text-align: center;"><button style="background-color: #303030 !important;" type="button"  class="btn submit st-btn outbtn01">{{ '当前存在未审核出金，禁止提交' | ctrans }}</button></td>
+                            {% else %}
+                                <td colspan="4" class="tac" style="text-align: center"><button type="button" onclick="formInit.next(this);" class="btn submit st-btn outbtn01">{{ '下一步' | ctrans }}</button></td>
+                            {% endif %}
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab" style="display: none;">
+                    <table class="table" cellpadding="0" cellspacing="0" >
+
+                    </table>
+
+                    <table class="table" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td colspan="2" style="text-align: right;position: relative;">
+								<div class="withrem">{{ '请注意您的保证金比例，出金可能导致爆仓风险。' | ctrans }}</div>
+                                <div class="yzm">
+                                    <p class="fl">{{ '验证码' | ctrans }}：</p>
+                                    <img id="checkcode" src="{{ asset('/captcha/window') }}" onClick="this.src='/captcha/window?a='+Math.random();"  class="mr10" alt="" style="height:48px">
+                                    <input type="text" name="vcode" class="w5 fl empty">
+                                </div>
+                            </td>
+                            <td  colspan="2" style="text-align: left">
+                                <div id="conceal">
+                                    <button type="button" onclick="formInit.back(this);" class="st-btn btn tar back">{{ '返回上一步' | ctrans }}</button>
+                                    <button type="submit" id="submitno" class="st-btn sure submit">{{ '确认无误现在申请' | ctrans }}</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab" style="display: none;">
+
+                </div>
+            </div>
+        </form>
+
+    {% else %}
+        <div style='padding:100px;height:150px;'><p style='text-align:center;color:{{ attribute(data.MODULE,"MainColor") is defined ? data.MODULE.MainColor:0 }};font-size:14px;'>{{ '目前网站正在维护，暂不支持该操作。' | ctrans }}</p></div>
+    {% endif %}
+
+{% endblock %}
+{% block initScripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        {% if order.data is not empty %}
+            var currency={{ order.data[0].currency }};
+            var payment={{ order.data[0].payment }};
+            var olduklogin='{{ order.data[0].uklogin }}';
+            $(function(){
+                $('#makeMethod_selected').find('option').each(function(){
+                    var tmpval=$(this).val();
+                    switch(payment){
+                        case 1:{if(tmpval=='wire'){this.selected=true;$(this).change();}}break;
+                        case 2:{if(tmpval=='ambank'){this.selected=true;$(this).change();}}break;
+                        case 3:{if(tmpval=='unionpay'){this.selected=true;$(this).change();}}break;
+                        case 4:{if(tmpval=='skrill'){this.selected=true;$(this).change();}}break;
+                        case 5:{if(tmpval=='paypal'){this.selected=true;$(this).change();}}break;
+                        case 6:{if(tmpval=='neteller'){this.selected=true;$(this).change();}}break;
+                    }
+                });
+
+                $('#test_checked').val(currency);
+                $('#tradlist').val(olduklogin);
+            });
+        {% endif %}
+
+    </script>
+    <script type="text/javascript" src="{{ asset('/public/ccount/js/layer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/capital/withdrawal.js') }}"></script>
+{% endblock %}

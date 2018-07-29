@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ '找回密码' | ctrans }}</title>
+    <link rel="stylesheet" href="{{ asset('public/css/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/ccount/css/layer.css') }}">
+    <script src="{{ asset('public/ccount/js/jquery-1.11.1.min.js') }}"></script>
+    <script src="{{ asset('public/ccount/js/layer.js') }}"></script>
+
+</head>
+
+<body>
+    <div class="login">
+        <div class="topbar2">
+            <a href="#" class="logo"><img src="{% if data.WEB.website_notlogin_logo is defined  and data.WEB.system_webadmin_url  is defined and data.WEB.website_notlogin_logo!=[] %}{{ data.WEB.website_notlogin_logo }}{% else %}{{ asset('public/images/logom.png') }}{% endif %}" alt=""></a>
+            <a href="/" class="home"><img src="{{ asset('public/images/home.gif') }}" alt=""></a>
+        </div>
+        <form class="am-form" method="get" action="{{ asset('/user/send/email') }}"  onsubmit="submitEmail(this);return false">
+            <table class="from-login" cellspacing="0" cellpadding="0">
+
+                <tr>
+                    <td>{{ '电子邮箱' | ctrans }}</td><td>
+                        <div class="username">
+                            <input id="username" name="email" type="text" placeholder="{{ '请输入电子邮件' | ctrans }}">
+                            <i></i>
+                        </div>
+                    </td>
+
+                </tr>
+                <tr>
+                <td>{{ '验证码' | ctrans }}</td>
+                <td>
+                 <div class="yzm">
+                        <input type="text" name="captcha" class="" id="doc-ipt-captcha-1" placeholder="{{ '请输入验证码' | ctrans }}" >
+                    </div>
+                </td>
+                <td>
+                    <div class="img">
+                        <img id="yzm" height="43" src="{{ asset('/captcha/getCaptcha') }}" onclick="this.src='/captcha/getCaptcha?cc='+Math.random();" >
+                    </div>
+                {% if msg is defined  %}
+                <div class="am-form-group login-font">
+                    <i> {{ msg }}</i>
+                </div>
+                {% endif %}
+                </td>
+                </tr>
+                <input type="hidden" name="format" value="html" />
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <button class="btn-login" type="submit">{{ '找回密码' | ctrans }}</button>
+                    </td>
+                </tr>
+
+            </table>
+        </form>
+    </div>
+</body>
+
+
+<script>
+    function submitEmail(m) {
+        $.ajax({
+            url:$(m).attr("action") ,
+            type:$(m).attr("method"),
+            dataType:"json",
+            data:$(m).serialize(),
+            success: function(obj){
+                if(obj.code==false){
+                    layer.alert(obj.msg,{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]})
+                }else {
+                    layer.alert(obj.data.response,{
+                        yes:function () {
+                            parent.layer.closeAll();
+                        }
+                    })
+
+                }
+            },
+            error:function () {
+                layer.alert("{{ '网络错误' | ctrans }}",{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]})
+            }
+
+        });
+
+
+    }
+
+
+</script>
+
+
+
+</html>

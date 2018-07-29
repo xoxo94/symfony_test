@@ -1,0 +1,69 @@
+formInit.onNext=function(m){
+    var linow=$('form .st-tabs').eq(0).find('li.on');
+    if(linow.index()==0) {
+        var inhtml='<tr><td colspan="4" class="st-title">A. {{ '账户信息&联络资料' | ctrans }}</td></tr>'+
+            '<tr><td class="w14">{{ '账户' | ctrans }}</td><td class="w13"><input class="w1" type="text"  value="'+$('form input[name=username]').val()+'" readonly></td>' +
+            '<td class="w14">{{ '客户姓名' | ctrans }}</td><td class="w13"><input class="w1" readonly type="text"value="'+$('form input[name=nickname]').val()+'"></td></tr>'+
+            '<tr><td  class="w14">{{ '手机号码' | ctrans }}</td><td class="w13"><input class="w1" readonly type="text" value="'+$('form input[name=mobile]').val()+'"></td>' +
+            '<td  class="w14">{{ '邮箱地址' | ctrans }}</td><td class="w13"><input class="w1" type="text" readonly value="'+$('form input[name=email]').val()+'"></td></tr>'+
+            '<tr><td colspan="4" class="st-title">B. {{ '入金信息' | ctrans }}</td></tr>'+
+            '<tr><td class="w14">{{ '金额(USD)' | ctrans }}</td><td class="w13"><input class="w1" type="text"  value="'+$('form input[name=amount]').val()+'" readonly></td>' +
+            '<td class="w14">{{ '付款银行' | ctrans }}</td><td class="w13"><input class="w1" type="text"  value="'+$('form input[name=bank]').val()+'" readonly></td></tr>'+
+            '<tr><td class="w14" colspan="1">{{ '凭证号' | ctrans }}</td><td class="w12" colspan="3"><input class="w12" type="text"  value="'+$('form input[name=orderno]').val()+'" readonly></td></tr>'+
+            '</tr>';
+        $('form div.tab').eq(1).find('table.table').eq(0).html(inhtml);
+    }
+    return true;
+}
+formInit.selectIntoMethodChange=function(m){
+    var v_val=$(m).val();
+    if(v_val=='1'){
+        $('form select[name=mt4no]').show();
+
+
+        {#$('#tradlist').show();#}
+        {#$("#tradlist").attr("name","mt4no");#}
+        {#$("#tradlist").addClass("empty");#}
+
+        {#$('#commission').hide();#}
+        {#$("#commission").attr("name","");#}
+        {#$("#commission").removeClass("empty");#}
+    }else{
+        $('form select[name=mt4no]').hide();
+
+        {#$("#commission").attr("name","mt4no");#}
+        {#$('#commission').show();#}
+        {#$("#commission").addClass("empty");#}
+        {#$("#tradlist").attr("name","");#}
+        {#$('#tradlist').hide();#}
+        {#$("#tradlist").removeClass("empty");#}
+    }
+}
+/**
+ * 入金汇率 换算
+ * @param m
+ * @returns {boolean}
+ */
+formInit.currencyexa=function (m) {
+      var val=m.value.replace(/[^0-9\.]/g,'');
+    var amount=parseFloat($(m).val())?parseFloat($(m).val()):0;
+    if($(m).val()==0 || $(m).val()== null){ $('.exa').html('<font class="amount">{{ '金额不能为空' | ctrans  }}</font>' ); return false}
+      $(m).val(val)
+    if(isNaN($(m).val())){
+        $('.exa').html('<font class="amount">{{ '金额必须是数字' | ctrans  }}</font>' );
+        return false;
+    }
+    var html="";
+    {% for  rows in currency %}
+    var exa=amount*parseFloat('{{ rows.exa }}');
+    html+='{{ rows.name }}'+":<font class='amount'>"+exa.toFixed(2)+"</font>";
+    {% endfor %}
+
+    $('.exa').html('').html(html);
+
+}
+
+
+
+
+

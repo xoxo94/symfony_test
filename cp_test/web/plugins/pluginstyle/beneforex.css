@@ -1,0 +1,110 @@
+.table select{ height: 40px!important;}
+select{  padding: 6px 16px!important; }
+.mian-title{  color: #ff6c46 !important;  font-size: 26px !important; }
+.link p span{  color: #ff6c46 !important;  font-size: 16px !important; }
+a:hover{ color: #ff6c46 !important;border-bottom-color: #ff6c46!important;text-decoration: none !important;}
+.link a:hover, .link a.on {  text-decoration: none ;  color: #ff6c46!important;  border-bottom: 1px solid !important;  }
+.zd-search button {  font-size: 16px  !important;  border: 1px solid #ff6c46!important;  background-color: #ff6c46!important; }
+.zd-search input {  border-radius: 10px; color: #a9a9a9  !important; font-size: 16px !important;  }
+.zd-recond input{  font-size: 16px  !important;  border-radius: 10px; }
+.w2,.w1,.w3{ font-size: 16px  !important;  border-radius: 10px !important;  }
+.page div {  font-size: 16px !important;  }
+.table{  border: none !important;  border-top: 1px solid #e6e6e6 !important;  }
+.zd-table .thead td {  color: #3c3c3c !important;  font-size: 18px !important;  }
+.table .search {  border: 1px solid #ff6c46!important;  color: #fff !important;;  background-color: #ff6c46!important;  }
+.zd-table {  border:none !important;  }
+.zd-table .thead td {  color: #666 !important;  }
+.page div a {  color: #666 !important;  }
+.main-box .left-box {  border-right: 1px solid  #363636 !important;background-color: #363636 !important;   }
+.menu li{  border-bottom: 1px solid #363636 !important;background-image:none !important; background-image: url("../../public/ccount/images/123.png") ;background-position-x: 182px;!important; }
+.menu li a {  color: #fff !important; text-indent: 38px !important; }
+.menu li a.i1,a.i2,a.i3,a.i4,a.i5,a.i6 {  background-image:none !important;  }
+.menu li.on a, .menu li:hover a {  width: 83% !important;  height:44px !important;  margin-left: 10% !important;  line-height: 44px !important;  border-radius: 30px !important;  background-color: #ff6c46 !important;  background-image:none !important;  background-image: url("../../public/ccount/images/123.png") !important;  background-position-x: 150px;  background-position-y: 15px;  transition: all 0s !important;  }
+.transfer .button {  background-color: #ff6c46 !important;  }
+input.w8.empty.amount{border-radius: 10px;}
+select[name="currency"]{border-radius: 10px !important; }
+input[name="voucher"]{border-radius: 10px !important;}
+.w12{border-radius: 10px !important;}
+.fr:hover{border-color: #ebc321 !important;}
+#MTVZ:hover{ border-color: #ebc321 !important;  }
+.theusername:hover {  border-color: #ebc321 !important;  }
+.link4 a.detail {  background-color: #ff6c46 !important;  color: #fff !important;  border: 1px solid #ff6c46 !important;  }
+.link4 a.detail:hover{background-color: #ff6c46 !important;}
+.layui-layer-btn .layui-layer-btn0 {  border-color:#ff6c46 !important;  background-color: #ff6c46 !important;  color: #fff !important;  }
+.layui-layer-btn .layui-layer-btn0:hover{ color: #fff !important;}
+.layui-layer-btn1{  border-color:#ff6c46 !important;  background-color: #ff6c46 !important;  color: #fff !important;  }
+.layui-layer-btn1:hover{ color: #fff !important;}
+.topbar .info .account{background-image: url("/public/images/account.png");}
+.topbar{background-color:#5b5b5b;}
+select[name="tomt4"]{border-radius: 10px !important;}
+.tab dl dd:hover{border-color: #ebc321 !important;}
+.tab dl dt .add:hover{background-color: #ff6c46 !important; color: #fff !important;}
+.tab dl dt .add{color:#ff6c46 !important;border-color: #ff6c46 !important; }
+.text{border-radius: 10px !important;}
+input[type="text"]{border-radius: 10px !important;}
+button#insides {  background-color: #ebc330 !important;}
+.topbar .select .option.simple {  background-image: url("/public/images/simple.png");  }
+/*资料管理*/
+#mobile,#mobilecode,#email,#address{ border-radius: 10px; }
+.change-pw button { background-color: #ff6c46!important; border-radius: 30px;}
+.change-pw button:hover { background-color: #ff6c46!important; }
+.change button {  background-color:#ebc330 !important;  }
+.change button:hover {  background-color: #ebc330 !important;  }
+.my .my-cart table button{ border-color: #ff6c46 !important;color: #ff6c46 !important;}
+.my .my-cart table button:hover{  background-color: #ff6c46 !important;color: #fff !important;   }
+/*交易记录*/
+.link2 button {  background-color: #ff6c46 !important; }
+.link2 button:hover{  background-color: #ff6c46!important;}
+.table .sthead {  font-size:18px !important;  color: #3c3c3c !important;}
+div.mztreeview a.selected{  color:#ff6c46 !important;}
+/*合作伙伴*/
+.back .back1 .fr table button {  background-color: #ff6c46!important;  border: 1px solid #ff6c46!important; }
+.back .back1 .fr table button:hover{  background-color: #ff6c46!important; }
+.back .back2 thead { color: #3c3c3c !important;  font-size:18px !important;}
+.back .back1 .fl {  color: #ff6c46!important; }
+/*注册出入金注册表单*/
+body>form {background: #fff !important; }
+.st-tabs { margin-bottom: 0px !important;background-color: #303030;margin-bottom: 0;margin-left:0;}
+.st-tabs li {  background-image:url("../../public/ccount/images/123.png") !important;  }
+.st-tabs li.on i {  background-color: #303030 !important;  color: #ebc321 !important; border: none !important;}
+.st-tabs li i {  border:none !important; color: #fff !important; }
+input[type="file"]::before { line-height:40px !important; background: #ebc321 !important; border: 1px solid #ebc321 !important;  }
+input[type="file"]:hover::before{background: #ebc321 !important;}
+input[type="file"]:active::before{background: #ebc321 !important;}
+input[type="text"]:hover,input[type="password"]:hover{border-color: #ebc321 !important;}
+input[type="text"]:focus,input[type="password"]:focus{border-color: #ebc321 !important;text-indent: 33px;}
+.table .st-btn.btn {  background-color: #ebc321 !important;  }
+.table .st-btn.btn:hover {   background-color: #ebc321 !important;  }
+.table .sure {   background-color: #ebc321 !important;  }
+.table .sure:hover  {   background-color: #ebc321 !important;  }
+.table input {  font-size: 16px;  height: 40px !important;  font-weight: bold;  text-indent: 33px;  }
+.table .yzm input:hover{border-color: #ebc321 !important;}
+.table .yzm input:focus{border-color: #ebc321 !important;}
+select:hover{border-color: #ebc321 !important;}
+select:focus{border-color: #ebc321 !important;}
+.table .st-btn:hover{background-color: #ebc321 !important;}
+.table .st-btn:active{background-color: #ebc321 !important;}
+#pluginslang .language_div:hover{border: 1px solid  #5b5b5b !important;}
+#pluginslang .language_ul li:hover{border-bottom: 1px solid  #5b5b5b!important;border-top: 1px solid  #5b5b5b !important;}
+.topbar .select ul {  background-color: #5b5b5b !important;  }
+.topbar .select{  background-image:url("../../public/images/select.png") !important;margin: 15px 0 0 35px !important;width: 105px !important;}
+.sure{color: #ebc321 !important;}
+#r{ color: #ff6c46  !important;}
+.balance{ color: #ff6c46 !important;}
+.cc p{ color: #ff6c46 !important;}
+.tab dl dd:hover{border-color:#ebc321 !important;}
+.tab dl dd:hover .type{border-color:#ebc321 !important;}
+.tab dl dd .type:hover { border-color: #ebc321 !important;}
+.tab dl dd:hover .type .cc{border-color:#ebc321 !important;}
+.tab dl dd .type .cc:hover{ border-color: #ebc321 !important;}
+button.st-btn.tar.sure.next{ color: #fff !important;}
+button#submitno{color: #fff !important; }
+select.w3.fl.tradlist{width: 240px !important;}
+.recond li i{color: #ff6c46 !important;background-image: url("../../public/images/2.gif") !important;}
+.recond li i.on {  color: #fff !important;background-image: url("../../public/images/2-2.gif") !important; }
+.recond li .info .text h2 {  color: #ff6c46;  }
+/*代理下交易记录*/
+.link4{ color:#787878 !important;}
+.link4 table tr td {  color: #787878 !important;}
+#trees{color:  #ff6c46 !important;}
+*+html .main-box,.right-box{overflow: auto;height: auto ;width:75%;}

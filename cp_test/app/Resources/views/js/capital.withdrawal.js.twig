@@ -1,0 +1,397 @@
+formInit.onNext=function(m){
+    var linow=$('form .st-tabs').eq(0).find('li.on');
+    if(linow.index()==0) {
+        var inhtml='<tr><td colspan="4" class="st-title">A. {{ '账户信息&联络资料' | ctrans }}</td></tr>';
+        inhtml+='<tr><td class="w14">{{ '账户' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text" value="'+$('form input[name=username]').val()+'"></td> '+
+            '<td class="w14">{{ '客户姓名' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"value="'+$('form input[name=nickname]').val()+'"></td></tr>';
+        inhtml+='<tr><td  class="w14">{{ '手机号码' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text" value="'+$('form input[name=mobile]').val()+'"></td>' +
+            '<td  class="w14">{{ '邮箱地址' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text" value="'+$('form input[name=email]').val()+'"></td></tr>';
+        inhtml+='<tr><td colspan="4" class="st-title">B. {{ '出金信息' | ctrans }}</td></tr>';
+        inhtml+='<tr><td class="w14">{{ '金额(USD)' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=amount]').val()+'" readonly></td>' +
+            '<td class="w14">{{ '资金源' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form select[name=mt4no]').val().split("_")[1]+'" readonly></td></tr>';
+        switch($('form select[name=makeMethod]').val()){
+            case 'wire':{
+                inhtml+='<tr><td class="w14">{{ '收款方式' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="{{ '国际电汇' | ctrans }}" readonly></td>' +
+                    '<td class="w14">{{ '收款姓名' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bankname]').val()+'" readonly></td></tr>';
+                inhtml+='<tr><td class="w14">{{ '开户银行' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bank]').val()+'" readonly></td>' +
+                    '<td class="w14">{{ '开户行分行' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=banksub]').val()+'" readonly></td></tr>';
+                inhtml+='<tr><td class="w14">{{ '银行代码' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bankcode]').val()+'" readonly></td>' +
+                    '<td class="w14">{{ '收款账户' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bankcard]').val()+'" readonly></td></tr>'+
+                    '<tr><td class="w14">{{ '收款币种' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form select[name=currency]').find("option:selected").text()+'" readonly></td></tr>';
+            }break;
+            case 'ambank':{
+                inhtml+='<tr><td class="w14">{{ '收款方式' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="{{ '大马银行' | ctrans }}" readonly></td>' +
+                    '<td class="w14">{{ '收款姓名' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bankname]').val()+'" readonly></td></tr>';
+                inhtml+='<tr><td class="w14">{{ '开户银行' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bank]').val()+'" readonly></td>' +
+                    '<td class="w14">{{ '开户行分行' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=banksub]').val()+'" readonly></td></tr>';
+                inhtml+='<tr><td class="w14">{{ '收款账户' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bankcard]').val()+'" readonly></td>' +
+                    '<td class="w14">{{ '收款币种' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form select[name=currency]').find("option:selected").text()+'" readonly></td>' +
+                    '</tr>';
+            }break;
+            case 'unionpay':{
+                inhtml+='<tr><td class="w14">{{ '收款方式' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="{{ '中国银联' | ctrans }}" readonly></td>' +
+                    '<td class="w14">{{ '收款姓名' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bankname]').val()+'" readonly></td></tr>';
+                inhtml+='<tr><td class="w14">{{ '开户银行' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bank]').val()+'" readonly></td>' +
+                    '<td class="w14">{{ '开户行分行' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=banksub]').val()+'" readonly></td></tr>';
+                inhtml+='<tr><td class="w14">{{ '收款账户' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bankcard]').val()+'" readonly></td>' +
+                    '<td class="w14">{{ '收款币种' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form select[name=currency]').find("option:selected").text()+'" readonly></td>'+
+                    '</tr>';
+            }break;
+            case 'skrill':{
+                inhtml+='<tr><td class="w14">{{ '收款方式' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="Skrill" readonly></td>' +
+                    '<td class="w14">{{ '收款姓名' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bankname]').val()+'" readonly></td></tr>';
+                inhtml+='<tr><td class="w14">{{ '收款账户' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bankcard]').val()+'" readonly></td>' +
+                    '<td class="w14">{{ '收款币种' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form select[name=currency]').find("option:selected").text()+'" readonly></td>' +
+                    '</tr>';
+            }break;
+            case 'paypal':{
+                inhtml+='<tr><td class="w14">{{ '收款方式' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="PayPal" readonly></td>' +
+                    '<td class="w14">{{ '收款姓名' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bankname]').val()+'" readonly></td></tr>';
+                inhtml+='<tr><td class="w14">{{ '收款账户' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bankcard]').val()+'" readonly></td>' +
+                    '<td class="w14">{{ '收款币种' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form select[name=currency]').find("option:selected").text()+'" readonly></td>' +
+                    '</tr>';
+            }break;
+            case 'neteller':{
+                inhtml+='<tr><td class="w14">{{ '收款方式' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="Neteller" readonly></td>' +
+                    '<td class="w14">{{ '收款姓名' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bankname]').val()+'" readonly></td></tr>';
+                inhtml+='<tr><td class="w14">{{ '收款账户' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form input[name=bankcard]').val()+'" readonly></td>' +
+                    '<td class="w14">{{ '收款币种' | ctrans }}</td><td class="w13"><input class="w1 empty" type="text"  value="'+$('form select[name=currency]').find("option:selected").text()+'" readonly></td>' +
+                    '</tr>';
+            }break;
+        }
+        $('form div.tab').eq(1).find('table.table').eq(0).html(inhtml);
+    }
+    return true;
+}
+
+formInit.selectOutMethodChange=function(m){
+    var v_val=$(m).val();
+    var v_html='';
+    switch(v_val){
+        {% if order.data is not empty %}
+            {% if order.data[0].payment == 1 %}
+                case 'wire':{
+                    v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                        '<tr class="notice"><td class="name">{{ '开户银行' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20">';
+                    {% if order.data[0].bank is defined %}
+                        v_html+='<input name="bank" class="w1 empty" type="text" value="{{ order.data[0].bank }}" />';
+                    {% else %}
+                        v_html+='<input name="bank" class="w1 empty" type="text" value="" />';
+                    {% endif %}
+                    v_html+='<label for="male">{{ '收款账户的开户行' | ctrans }}</label></div>' +
+                        '<div class="label fl w17">';
+                    {% if order.data[0].banksub is defined %}
+                        v_html+='<input name="banksub" class="w1 empty" type="text" id="" value="{{  order.data[0].banksub }}"/>';
+                    {% else %}
+                        v_html+='<input name="banksub" class="w1 empty" type="text" id="" value=""/>';
+                    {% endif %}
+                    v_html+='<label for="male2">{{ '收款账户的开户行分行' | ctrans }}</label></div></td></tr>' +
+                        '<tr class="notice bankcode01" ><td class="name">{{ '银行代码' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20" >';
+                    {% if order.data[0].bankcode is defined %}
+                        v_html+='<input name="bankcode" class="w1 empty" type="text" value="{{ order.data[0].bankcode }}" />';
+                    {% else %}
+                        v_html+='<input name="bankcode" class="w1 empty" type="text"  />';
+                    {% endif %}
+                    v_html+='<label for="male">{{ '收款银行的 SWIFT CODE' | ctrans }}</label></div></td></tr>' +
+                        '<tr class="notice"><td class="name">{{ '收款账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20">';
+                    {% if order.data[0].bankcard is defined %}
+                        v_html+='<input name="bankcard" class="w1 empty" type="text" id="" value="{{ order.data[0].bankcard }}"/>';
+                    {% else %}
+                        v_html+='<input name="bankcard" class="w1 empty" type="text" id="" />';
+                    {% endif %}
+                    v_html+='<label for="male3">{{ '收款账户的卡号' | ctrans }}</label></div>' +
+                        '<div class="label fl w17">';
+                    {% if order.data[0].bankname is defined %}
+                        v_html+='<input  name="bankname" class="w1 empty" type="text" id="" value="{{ order.data[0].bankname }}"/>';
+                    {% else %}
+                        v_html+='<input  name="bankname" class="w1 empty" type="text" id="" />';
+                    {% endif %}
+                    v_html+='<label for="male4">{{ '收款账户的户名' | ctrans }}</label></div></td></tr>';
+                }break;
+            {% else %}
+                case 'wire':{
+                    v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                        '<tr class="notice"><td class="name">{{ '开户银行' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bank" class="w1 empty" type="text"  /><label for="male">{{ '收款账户的开户行' | ctrans }}</label></div>' +
+                        '<div class="label fl w17"><input name="banksub" class="w1 empty" type="text" id="" /><label for="male2">{{ '收款账户的开户行分行' | ctrans }}</label></div></td></tr>' +
+                        '<tr class="notice bankcode01" ><td class="name">{{ '银行代码' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20" ><input name="bankcode" class="w1 empty" type="text"  /><label for="male">{{ '收款银行的 SWIFT CODE' | ctrans }}</label></div></td></tr>' +
+                        '<tr class="notice"><td class="name">{{ '收款账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bankcard" class="w1 empty" type="text" id="" /><label for="male3">{{ '收款账户的卡号' | ctrans }}</label></div>' +
+                        '<div class="label fl w17"><input  name="bankname" class="w1 empty" type="text" id="" /><label for="male4">{{ '收款账户的户名' | ctrans }}</label></div></td></tr>';
+                }break;
+            {% endif %}
+            {% if order.data[0].payment == 2 %}
+                case 'ambank':{
+                    v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                        '<tr class="notice"><td class="name">{{ '开户银行' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20">';
+                    {% if order.data[0].bank is defined %}
+                        v_html+='<input name="bank" class="w1 empty" type="text" value="{{ order.data[0].bank }}" />';
+                    {% else %}
+                        v_html+='<input name="bank" class="w1 empty" type="text" value="" />';
+                    {% endif %}
+                    v_html+='<label for="male">{{ '收款账户的开户行' | ctrans }}</label></div>' +
+                        '<div class="label fl w17">';
+                    {% if order.data[0].banksub is defined %}
+                        v_html+='<input name="banksub" class="w1 empty" type="text" id="" value="{{ order.data[0].banksub }}"/>';
+                    {% else %}
+                        v_html+='<input name="banksub" class="w1 empty" type="text" id="" value=""/>';
+                    {% endif %}
+                    v_html+='<label for="male2">{{ '收款账户的开户行分行' | ctrans }}</label></div></td></tr>' +
+                        '<tr class="notice"><td class="name">{{ '收款账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20">';
+                    {% if order.data[0].bankcard is defined %}
+                        v_html+='<input name="bankcard" class="w1 empty" type="text" id="" value="{{ order.data[0].bankcard }}"/>';
+                    {% else %}
+                        v_html+='<input name="bankcard" class="w1 empty" type="text" id="" value=""/>';
+                    {% endif %}
+                    v_html+='<label for="male3">{{ '收款账户的卡号' | ctrans }}</label></div>' +
+                        '<div class="label fl w17">';
+                    {% if order.data[0].bankname is defined %}
+                        v_html+='<input  name="bankname" class="w1 empty" type="text" id="" value="{{ order.data[0].bankname }}"/>';
+                    {% else %}
+                        v_html+='<input  name="bankname" class="w1 empty" type="text" id="" value=""/>';
+                    {% endif %}
+                    v_html+='<label for="male4">{{ '收款账户的户名' | ctrans }}</label></div></td></tr>';
+                }break;
+            {% else %}
+                case 'ambank':{
+                    v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                        '<tr class="notice"><td class="name">{{ '开户银行' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bank" class="w1 empty" type="text"  /><label for="male">{{ '收款账户的开户行' | ctrans }}</label></div>' +
+                        '<div class="label fl w17"><input name="banksub" class="w1 empty" type="text" id="" /><label for="male2">{{ '收款账户的开户行分行' | ctrans }}</label></div></td></tr>' +
+                        '<tr class="notice"><td class="name">{{ '收款账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bankcard" class="w1 empty" type="text" id="" /><label for="male3">{{ '收款账户的卡号' | ctrans }}</label></div>' +
+                        '<div class="label fl w17"><input  name="bankname" class="w1 empty" type="text" id="" /><label for="male4">{{ '收款账户的户名' | ctrans }}</label></div></td></tr>';
+                }break;
+            {% endif %}
+            {% if order.data[0].payment == 3 %}
+                case 'unionpay':{
+                    v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                        '<tr class="notice"><td class="name">{{ '开户银行' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20">';
+                    {% if order.data[0].bank is defined %}
+                        v_html+='<input name="bank" class="w1 empty" type="text" value="{{ order.data[0].bank }}" />';
+                    {% else %}
+                        v_html+='<input name="bank" class="w1 empty" type="text" value="" />';
+                    {% endif %}
+                    v_html+='<label for="male">{{ '收款账户的开户行' | ctrans }}</label></div>' +
+                        '<div class="label fl w17">';
+                    {% if order.data[0].banksub is defined %}
+                        v_html+='<input name="banksub" class="w1 empty" type="text" id="" value="{{ order.data[0].banksub }}"/>';
+                    {% else %}
+                        v_html+='<input name="banksub" class="w1 empty" type="text" id="" />';
+                    {% endif %}
+                    v_html+='<label for="male2">{{ '收款账户的开户行分行' | ctrans }}</label></div></td></tr>' +
+                        '<tr class="notice"><td class="name">{{ '收款账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20">';
+                    {% if order.data[0].bankcard is defined %}
+                        v_html+='<input name="bankcard" class="w1 empty" type="text" id="" value="{{ order.data[0].bankcard }}"/>';
+                    {% else %}
+                        v_html+='<input name="bankcard" class="w1 empty" type="text" id="" />';
+                    {% endif %}
+                    v_html+='<label for="male3">{{ '收款账户的卡号' | ctrans }}</label></div>' +
+                        '<div class="label fl w17">';
+                    {% if order.data[0].bankname is defined %}
+                        v_html+='<input  name="bankname" class="w1 empty" type="text" id="" value="{{ order.data[0].bankname }}"/>';
+                    {% else %}
+                        v_html+='<input  name="bankname" class="w1 empty" type="text" id="" />';
+                    {% endif %}
+                    v_html+='<label for="male4">{{ '收款账户的户名' | ctrans }}</label></div></td></tr> <tr class="notice ficate">' +
+                        '<tr class="notice"><td class="name">{{ '银行卡正面' | ctrans }}</td><td class="input" colspan="3"> <div class="label fl w17 mr20">';
+                    {% if order.data[0].bankpositive is defined %}
+                        v_html+='<input name="bankpositive" readonly class="w7 fl empty" type="text" placeholder="" value="{{ order.data[0].bankpositive }}"/>';
+                    {% else %}
+                        v_html+='<input name="bankpositive" readonly class="w7 fl empty" type="text" placeholder="" />';
+                    {% endif %}
+                    v_html+='<input type="file" style="position: relative" onchange="formInit.upload(this);" class="uploadCert fl" accept="image/gif, image/jpg,image/jpeg, image/bmp, image/png" capture="camera" name="file" />' +
+                        '</td></tr>' +
+                        '<tr class="notice"><td class="name">{{ ' 银行卡反面' | ctrans }}</td><td class="input" colspan="3"> <div class="label fl w17 mr20">';
+                    {% if order.data[0].bankaddress is defined %}
+                        v_html+='<input name="bankaddress" readonly class="w7 fl empty" type="text" placeholder="" value="{{ order.data[0].bankaddress }}"/>';
+                    {% else %}
+                        v_html+='<input name="bankaddress" readonly class="w7 fl empty" type="text" placeholder="" />';
+                    {% endif %}
+                    v_html+='<input type="file" style="position: relative" onchange="formInit.upload(this);" class="uploadCert fl" accept="image/gif, image/jpg,image/jpeg, image/bmp, image/png" capture="camera" name="file" /></td></tr>';
+                }break;
+            {% else %}
+                case 'unionpay':{
+                    v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                        '<tr class="notice"><td class="name">{{ '开户银行' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bank" class="w1 empty" type="text"  /><label for="male">{{ '收款账户的开户行' | ctrans }}</label></div>' +
+                        '<div class="label fl w17"><input name="banksub" class="w1 empty" type="text" id="" /><label for="male2">{{ '收款账户的开户行分行' | ctrans }}</label></div></td></tr>' +
+                        '<tr class="notice"><td class="name">{{ '收款账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bankcard" class="w1 empty" type="text" id="" /><label for="male3">{{ '收款账户的卡号' | ctrans }}</label></div>' +
+                        '<div class="label fl w17"><input  name="bankname" class="w1 empty" type="text" id="" /><label for="male4">{{ '收款账户的户名' | ctrans }}</label></div></td></tr> <tr class="notice ficate">' +
+                        '<tr class="notice"><td class="name">{{ '银行卡正面' | ctrans }}</td><td class="input" colspan="3"> <div class="label fl w17 mr20"> <input name="bankpositive" readonly class="w7 fl empty" type="text" placeholder="" />' +
+                        '<input type="file" style="position: relative" onchange="formInit.upload(this);" class="uploadCert fl" accept="image/gif, image/jpg,image/jpeg, image/bmp, image/png" capture="camera" name="file" />' +
+                        '</td></tr>' +
+                        '<tr class="notice"><td class="name">{{ ' 银行卡反面' | ctrans }}</td><td class="input" colspan="3"> <div class="label fl w17 mr20"> <input name="bankaddress" readonly class="w7 fl empty" type="text" placeholder="" />' +
+                        '<input type="file" style="position: relative" onchange="formInit.upload(this);" class="uploadCert fl" accept="image/gif, image/jpg,image/jpeg, image/bmp, image/png" capture="camera" name="file" /></td></tr>';
+                }break;
+            {% endif %}
+            {% if order.data[0].payment == 4 %}
+                case 'skrill':{
+                    v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                        '<tr class="notice"><td class="name">{{ 'Skrill账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20">';
+                    {% if order.data[0].bankcard is defined %}
+                        v_html+='<input name="bankcard" class="w1 empty" type="text" id="" value="{{ order.data[0].bankcard }}"/>';
+                    {% else %}
+                        v_html+='<input name="bankcard" class="w1 empty" type="text" id="" />';
+                    {% endif %}
+                    v_html+='<label for="male3">{{ 'Skrill收款账户的号码' | ctrans }}</label></div>' +
+                        '<div class="label fl w17">';
+                    {% if order.data[0].bankname is defined %}
+                        v_html+='<input name="bankname" class="w1 empty" type="text" id="" value="{{ order.data[0].bankname }}"/>';
+                    {% else %}
+                        v_html+='<input name="bankname" class="w1 empty" type="text" id="" />';
+                    {% endif %}
+                    v_html+='<label for="male4">{{ 'Skrill收款账户的户名' | ctrans }}</label></div></td></tr>';
+                }break;
+            {% else %}
+                case 'skrill':{
+                    v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                        '<tr class="notice"><td class="name">{{ 'Skrill账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bankcard" class="w1 empty" type="text" id="" /><label for="male3">{{ 'Skrill收款账户的号码' | ctrans }}</label></div>' +
+                        '<div class="label fl w17"><input name="bankname" class="w1 empty" type="text" id="" /><label for="male4">{{ 'Skrill收款账户的户名' | ctrans }}</label></div></td></tr>';
+                }break;
+            {% endif %}
+            {% if order.data[0].payment == 5 %}
+                case 'paypal':{
+                    v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                        '<tr class="notice"><td class="name">{{ 'PayPal账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20">';
+                    {% if order.data[0].bankcard is defined %}
+                        v_html+='<input name="bankcard" class="w1 empty" type="text" id="" value="{{ order.data[0].bankcard }}"/>';
+                    {% else %}
+                        v_html+='<input name="bankcard" class="w1 empty" type="text" id="" />';
+                    {% endif %}
+                    v_html+='<label for="male3">{{ 'PayPal收款账户的号码' | ctrans }}</label></div>' +
+                        '<div class="label fl w17">';
+                    {% if order.data[0].bankname is defined %}
+                        v_html+='<input name="bankname" class="w1 empty" type="text" id="" value="{{ order.data[0].bankname }}"/>';
+                    {% else %}
+                        v_html+='<input name="bankname" class="w1 empty" type="text" id="" />';
+                    {% endif %}
+                    v_html+='<label for="male4">{{ 'PayPal收款账户的户名' | ctrans }}</label></div></td></tr>';
+                }break;
+            {% else %}
+                case 'paypal':{
+                    v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                        '<tr class="notice"><td class="name">{{ 'PayPal账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bankcard" class="w1 empty" type="text" id="" /><label for="male3">{{ 'PayPal收款账户的号码' | ctrans }}</label></div>' +
+                        '<div class="label fl w17"><input name="bankname" class="w1 empty" type="text" id="" /><label for="male4">{{ 'PayPal收款账户的户名' | ctrans }}</label></div></td></tr>';
+                }break;
+            {% endif %}
+            {% if order.data[0].payment == 6 %}
+                case 'neteller':{
+                    v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                        '<tr class="notice"><td class="name">{{ 'Neteller账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20">';
+                    {% if order.data[0].bankcard is defined %}
+                        v_html+='<input name="bankcard" class="w1 empty" type="text" id="" value="{{ order.data[0].bankcard }}"/>';
+                    {% else %}
+                        v_html+='<input name="bankcard" class="w1 empty" type="text" id="" "/>';
+                    {% endif %}
+                    v_html+='<label for="male3">{{ 'Neteller收款账户的号码' | ctrans }}</label></div>' +
+                        '<div class="label fl w17">';
+                    {% if order.data[0].bankname is defined %}
+                        v_html+='<input name="bankname" class="w1 empty" type="text" id="" value="{{ order.data[0].bankname }}"/>';
+                    {% else %}
+                        v_html+='<input name="bankname" class="w1 empty" type="text" id="" />';
+                    {% endif %}
+                    v_html+='<label for="male4">{{ 'Neteller收款账户的户名' | ctrans }}</label></div></td></tr>';
+                }break;
+            {% else %}
+                case 'neteller':{
+                    v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                        '<tr class="notice"><td class="name">{{ 'Neteller账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bankcard" class="w1 empty" type="text" id="" /><label for="male3">{{ 'Neteller收款账户的号码' | ctrans }}</label></div>' +
+                        '<div class="label fl w17"><input name="bankname" class="w1 empty" type="text" id="" /><label for="male4">{{ 'Neteller收款账户的户名' | ctrans }}</label></div></td></tr>';
+                }break;
+            {% endif %}
+        {% else %}
+            case 'wire':{
+                v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                    '<tr class="notice"><td class="name">{{ '开户银行' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bank" class="w1 empty" type="text"  /><label for="male">{{ '收款账户的开户行' | ctrans }}</label></div>' +
+                    '<div class="label fl w17"><input name="banksub" class="w1 empty" type="text" id="" /><label for="male2">{{ '收款账户的开户行分行' | ctrans }}</label></div></td></tr>' +
+                    '<tr class="notice bankcode01" ><td class="name">{{ '银行代码' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20" ><input name="bankcode" class="w1 empty" type="text"  /><label for="male">{{ '收款银行的 SWIFT CODE' | ctrans }}</label></div></td></tr>' +
+                    '<tr class="notice"><td class="name">{{ '收款账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bankcard" class="w1 empty" type="text" id="" /><label for="male3">{{ '收款账户的卡号' | ctrans }}</label></div>' +
+                    '<div class="label fl w17"><input  name="bankname" class="w1 empty" type="text" id="" /><label for="male4">{{ '收款账户的户名' | ctrans }}</label></div></td></tr>';
+            }break;
+            case 'ambank':{
+                v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                    '<tr class="notice"><td class="name">{{ '开户银行' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bank" class="w1 empty" type="text"  /><label for="male">{{ '收款账户的开户行' | ctrans }}</label></div>' +
+                    '<div class="label fl w17"><input name="banksub" class="w1 empty" type="text" id="" /><label for="male2">{{ '收款账户的开户行分行' | ctrans }}</label></div></td></tr>' +
+                    '<tr class="notice"><td class="name">{{ '收款账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bankcard" class="w1 empty" type="text" id="" /><label for="male3">{{ '收款账户的卡号' | ctrans }}</label></div>' +
+                    '<div class="label fl w17"><input  name="bankname" class="w1 empty" type="text" id="" /><label for="male4">{{ '收款账户的户名' | ctrans }}</label></div></td></tr>';
+            }break;
+            case 'unionpay':{
+                v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                    '<tr class="notice"><td class="name">{{ '开户银行' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bank" class="w1 empty" type="text"  /><label for="male">{{ '收款账户的开户行' | ctrans }}</label></div>' +
+                    '<div class="label fl w17"><input name="banksub" class="w1 empty" type="text" id="" /><label for="male2">{{ '收款账户的开户行分行' | ctrans }}</label></div></td></tr>' +
+                    '<tr class="notice"><td class="name">{{ '收款账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bankcard" class="w1 empty" type="text" id="" /><label for="male3">{{ '收款账户的卡号' | ctrans }}</label></div>' +
+                    '<div class="label fl w17"><input  name="bankname" class="w1 empty" type="text" id="" /><label for="male4">{{ '收款账户的户名' | ctrans }}</label></div></td></tr> <tr class="notice ficate">' +
+                    '<tr class="notice"><td class="name">{{ '银行卡正面' | ctrans }}</td><td class="input" colspan="3"> <div class="label fl w17 mr20"> <input name="bankpositive" readonly class="w7 fl empty" type="text" placeholder="" />' +
+                    '<input type="file" style="position: relative" onchange="formInit.upload(this);" class="uploadCert fl" accept="image/gif, image/jpg,image/jpeg, image/bmp, image/png" capture="camera" name="file" />' +
+                    '</td></tr>' +
+                    '<tr class="notice"><td class="name">{{ ' 银行卡反面' | ctrans }}</td><td class="input" colspan="3"> <div class="label fl w17 mr20"> <input name="bankaddress" readonly class="w7 fl empty" type="text" placeholder="" />' +
+                    '<input type="file" style="position: relative" onchange="formInit.upload(this);" class="uploadCert fl" accept="image/gif, image/jpg,image/jpeg, image/bmp, image/png" capture="camera" name="file" /></td></tr>';
+            }break;
+            case 'skrill':{
+                v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                    '<tr class="notice"><td class="name">{{ 'Skrill账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bankcard" class="w1 empty" type="text" id="" /><label for="male3">{{ 'Skrill收款账户的号码' | ctrans }}</label></div>' +
+                    '<div class="label fl w17"><input name="bankname" class="w1 empty" type="text" id="" /><label for="male4">{{ 'Skrill收款账户的户名' | ctrans }}</label></div></td></tr>';
+            }break;
+            case 'paypal':{
+                v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                    '<tr class="notice"><td class="name">{{ 'PayPal账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bankcard" class="w1 empty" type="text" id="" /><label for="male3">{{ 'PayPal收款账户的号码' | ctrans }}</label></div>' +
+                    '<div class="label fl w17"><input name="bankname" class="w1 empty" type="text" id="" /><label for="male4">{{ 'PayPal收款账户的户名' | ctrans }}</label></div></td></tr>';
+            }break;
+            case 'neteller':{
+                v_html='   <tr class="notice"><td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td></tr>' +
+                    '<tr class="notice"><td class="name">{{ 'Neteller账户' | ctrans }}</td><td class="input" colspan="3"><div class="label fl w17 mr20"><input name="bankcard" class="w1 empty" type="text" id="" /><label for="male3">{{ 'Neteller收款账户的号码' | ctrans }}</label></div>' +
+                    '<div class="label fl w17"><input name="bankname" class="w1 empty" type="text" id="" /><label for="male4">{{ 'Neteller收款账户的户名' | ctrans }}</label></div></td></tr>';
+            }break;
+        {% endif %}
+    }
+    $(m).parents('table.table').eq(0).next().html(v_html);
+}
+formInit.selectIntoMethodChange=function(m){
+    var v_val=$(m).val();
+    if(v_val=='1'){
+        $('#tradlist').show();
+        $("#tradlist").attr("name","mt4no");
+        $("#tradlist").addClass("empty");
+        $('#commission').hide();
+        $("#commission").attr("name","");
+        $("#commission").removeClass("empty");
+    }else{
+
+        $("#commission").attr("name","mt4no");
+        $('#commission').show();
+        $("#commission").addClass("empty");
+        $("#tradlist").attr("name","");
+        $('#tradlist').hide();
+        $("#tradlist").removeClass("empty");
+    }
+}
+
+/**
+ * 计算汇率
+ * @param m
+ * @returns {boolean}
+ */
+formInit.currency=function (m) {
+    var val=m.value.replace(/[^\d.]/g,'')
+    $(m).val(val)
+    var  currencyType=$("select[name=currency]").find("option:selected").attr("type");
+    var amount=parseFloat($('.amount').val());
+    var exchang=parseFloat($("select[name=currency]").find("option:selected").attr("exaout"));
+
+    if($('.amount').val()==0 || $('.amount').val()== null){ $('.exchang').html('<font class="amount">{{ '金额不能为空' | ctrans  }}</font>' ); return false}
+    if(isNaN($('.amount').val())){
+        $('.exchang').html('<font class="amount">{{ '金额必须是数字' | ctrans }}</font>' );
+        return false;
+    }
+    // 美金 汇率  /  暂时只是还未 加入 美元汇率
+    var exout=(amount*exchang);
+    if(isNaN(exout.toFixed(2))){
+        return false;
+    }
+    $('.exchang').html(currencyType+':<font class="amount">'+exout.toFixed(2)+'</font>' );
+
+
+}
+
+
+
+
+
+
+

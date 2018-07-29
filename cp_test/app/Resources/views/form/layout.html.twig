@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ data.title }}</title>
+    <link rel="stylesheet" href="{{ asset('/public/ccount/css/register.css') }}">
+    {#表单1#}
+    {% if data.WEB.website_style_form1 is defined  and data.WEB.website_style_form1 !=[] %}
+        <link id='style' rel="stylesheet"  type="text/css"  href="{{ data.WEB.website_style_form1}}">
+    {% endif %}
+
+</head>
+<body>
+{% block content %}
+{% endblock %}
+{% block initScripts %}
+    <script src="{{ asset("/public/ccount/js/jquery-1.11.1.min.js") }}"></script>
+    <script src="{{ asset("/js/form/form.js") }}"></script>
+{% endblock %}
+<script>
+    $(function () {
+        var url = window.location.pathname;
+        var link=$("#style").attr("href");
+        if (url=="/form/register_real" || url=="/form/register_agent_q" || url=="/form/register_agent"){
+
+            if (link=="/plugins/pluginstyle/alsa.css"){
+            $('body').css("background-image", "url(../../../../public/ccount/images/126.jpg)");
+            $('body').css("background-repeat", "no-repeat");
+            $('body>form').css('margin', '120px auto');
+            }
+        }
+    })
+</script>
+</body>
+</html>
+
+

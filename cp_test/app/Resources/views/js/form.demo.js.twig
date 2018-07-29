@@ -1,0 +1,34 @@
+
+formInit.onNext=function(m){
+    var linow=$('form .st-tabs').eq(0).find('li.on');
+    if(linow.index()==1) {
+		var re = /^[A-Za-z]+$/;
+            var inhtml='<table class="table" cellpadding="0" cellspacing="0">' +
+                '<tr>' +
+                '<td colspan="4" class="st-title">A. {{ '个人资料' | ctrans }}</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td class="w14">{{ '您的姓名' | ctrans }}</td>' +
+                '<td class="w12" colspan="3"><input readonly class="w10 empty" value=" '+$('form input[name=contactXEn]').val()+' '+$('form input[name=contactMEn]').val()+'" type="text"></td>' +
+                '</tr>' +
+				'<tr>' +
+                '<td colspan="4" class="st-title">B.{{ '联络资料' | ctrans }}</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td class="w14">{{ '手机' | ctrans }}</td>' +
+                '<td class="w13"><input readonly class="empty" value="'+$('form input[name=mobile]').val()+'" type="text"></td>' +
+                '<td class="w14">{{ '电子邮箱' | ctrans }}</td>' +
+                '<td class="w13"><input readonly class="empty" value="'+$('form input[name=email]').val()+'" type="text"></td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td colspan="4" class="st-title">C.{{ '内容补充' | ctrans }}</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td class="w14">{{ '附言' | ctrans }}</td>' +
+                '<td class="w12" colspan="3"><input readonly class="w17 empty" value="'+$('form textarea[name=content]').val()+'" type="text"></td>' +
+                '</tr>' +
+                '</table>';
+        $('form div.tab').eq(2).find('table.table').eq(0).html(inhtml);
+    }
+    return true;
+}

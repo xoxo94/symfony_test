@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if  data.WEB.website_sitename is defined  and data.WEB.website_sitename !=[] %} {{ data.WEB.website_sitename | ctrans }}{% else %}{{ '网站名称'  | ctrans}}..... {% endif %}</title>
+    <link rel="stylesheet"  type="text/css"  href="{{asset('/css/common.css') }}">
+    {#<link rel="stylesheet"  type="text/css"  href="{{asset('public/ccount/css/common.css') }}">#}
+      {#用户中心#}
+      {% if  data.WEB.website_style_index is defined  and data.WEB.website_style_index !=[]   %}
+      <link rel="stylesheet"  type="text/css"  href="{{ data.WEB.website_style_index}}">
+      {% endif %}
+      {#表单1#}
+      {% if data.WEB.website_style_form1 is defined  and data.WEB.website_style_form1 !=[] %}
+         <link rel="stylesheet"  type="text/css"  href="{{ data.WEB.website_style_form1}}">
+      {% endif %}
+        {#表单2#}
+       {% if data.WEB.website_style_form2 is defined  and data.WEB.website_style_form2 !=[] %}
+        <link rel="stylesheet"  type="text/css"  href="{{ data.WEB.website_style_form2}}">
+    {% endif %}
+    {#其他样式1#}
+    {% if data.WEB.website_style_other1 is defined  and data.WEB.website_style_other1 !=[] %}
+        <link rel="stylesheet"  type="text/css"  href="{{ data.WEB.website_style_other1}}">
+    {% endif %}
+    {#其他样式2#}
+    {% if data.WEB.website_style_other2 is defined  and data.WEB.website_style_other2 !=[] %}
+        <link rel="stylesheet"  type="text/css"  href="{{ data.WEB.website_style_other2}}">
+    {% endif %}
+
+    {#<link rel="stylesheet"  type="text/css"  href="{{asset('/css/common_cover.css') }}">#}
+    <link rel="stylesheet" href="{{asset('public/ccount/css/layer.css') }}">
+    <link rel="stylesheet" href="{{asset('public/ccount/css/enbed.css') }}">
+    <link rel="stylesheet" href="{{asset('public/ccount/css/mztreeview.css') }}">
+    <link rel="stylesheet" href="{{asset('public/ccount/css/jquery.treemenu.css') }}">
+
+    <script src="{{ asset('public/ccount/js/jquery-1.11.1.min.js') }}"></script>
+    <script src="{{ asset('public/ccount/js/layer.js') }}"></script>
+    <script src="{{ asset('public/ccount/js/jquery.cxscroll.min.js')}}"></script>
+    <script src="{{ asset('public/ccount/js/jquery.cxslide.min.js')}}"></script>
+    <script src="{{ asset('public/ccount/js/jquery.treemenu.js')}}"></script>
+    <script src="{{ asset('public/ccount/js/tree.js')}}"></script>
+    <script src="{{ asset('/js/common.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('/plugins/WdatePicker/WdatePicker.js') }}"></script>
+</head>
+<body>
+<div class="container">
+    <div class="topbar">
+        <a href="#" class="logo fl"></a>
+        <div class="select fl" id="pluginslang">
+            <script type="text/javascript" src="{{ asset('/js/lang.js') }}"></script>
+        </div>
+        <div class="info fr">
+            <a href="{{ data.WEB.system_csc_url }}" class="fl kf">{{ '联系客服' | ctrans }}</a>
+            <a href="{{ data.WEB.system_website_url }}" class="fl back">{{ '回到首页' | ctrans }}</a>
+            <div class="account fl">{{ app.session.get('userInfo').data.nickname }}</div>
+            <a onclick="logout()"><div class="quit fl">{{ '退出账户' | ctrans }}</div></a>
+        </div>
+        <div id="info" style="display: none"></div>
+    </div>
+    <div class="main-box">
+        <div class="main">
+            <div class="left-box">
+                <div class="menu">
+                    <ul>
+                        <li>
+                                <a class="i1" href="{{ asset('/user/fund/account') }}">{{ '账户管理' | ctrans }}</a>
+                        </li>
+                        <li>
+                            <a class="i2" href="{{ asset('/loa/index') }}">{{ '资料管理' | ctrans }}</a>
+                        </li>
+                        <li>
+                            <a class="i3" href="{{ asset('/uplo/index') }}">{{ '办理入金' | ctrans }}</a>
+                        </li>
+                        <li>
+                            <a class="i4" href=" {{ asset('/oa/index') }} ">{{ '办理出金' | ctrans }}</a>
+                        </li>
+
+                        <li>
+                            <a class="i5" href="{{ asset('/uplq/index') }}">{{ '交易记录' | ctrans }}</a>
+                        </li>
+                        {% if app.session.get('userInfo') is defined and app.session.get('userInfo').data.userdata.catid==3%}
+                            <li><a class="i5" href="{{ asset('/upl/index') }}">{{ '合作伙伴' | ctrans }}</a></li>
+                            <li><a class="i6" href="{{ asset('/plad/index') }}">{{ '代理下交易记录' | ctrans }}</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+
+{% if attribute(data.WEB,"plug_statisticalcode") is defined and data.WEB.plug_statisticalcode!='' %}
+    {{ data.WEB.plug_statisticalcode }}
+{% endif %}
+{% if attribute(data.WEB,"plug_othercode") is defined and data.WEB.plug_othercode!='' %}
+    {{ data.WEB.plug_othercode }}
+{% endif %}
+
+</html>

@@ -1,0 +1,63 @@
+formInit.onSubmit=function(m){
+    if(! $('form input[name=agreement]').is(':checked')){$('form input[name=agreement]').next().addClass('text-error');return false;}
+    return true;
+}
+formInit.onNext=function(m){
+    var linow=$('form .st-tabs').eq(0).find('li.on');
+    if(linow.index()==1) {
+		var re = /^[A-Za-z]+$/;
+		if(!isNaN($('form input[name=password]').val()) || $('form input[name=password]').val().length<8 || re.test($('form input[name=password]').val())){$('form input[name=password]').addClass('error');return false;}
+        if($('form input[name=password]').val()!=$('form input[name=chkpassword]').val()){ $('form input[name=chkpassword]').addClass('error').attr('title','{{ '两次密码不一致' | ctrans }}');return false;}
+         var usertype=$('form select[name=usertype]').val();
+        {% for  type in userType %}
+        if(usertype =='{{ type.id }}'){
+            usertype='{{ type.name }}';
+        }
+        {% endfor %}
+        var inhtml='<table class="table" cellpadding="0" cellspacing="0">' +
+                '<tr>' +
+                '<td colspan="4" class="st-title">A. {{ '个人资料' | ctrans }}</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td class="w14">{{ '您的姓名' | ctrans }}</td>' +
+                '<td class="w13"><input readonly class="empty" value="'+$('form input[name=contactXEn]').val()+' '+$('form input[name=contactMEn]').val()+'" type="text"></td>' +
+                '<td class="w14">{{ '出生日期' | ctrans }}</td>' +
+                '<td class="w13"><input readonly class="empty" value="'+$('form input[name=birthday]').val()+'" type="text"></td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td class="w14">{{ '直辖市/省份' | ctrans }}</td>' +
+                '<td class="w13"><input readonly class="empty" value="'+$('form input[name=province]').val()+'" type="text"></td>' +
+                '<td class="w14">{{ '城市' | ctrans }}</td>' +
+                '<td class="w13"><input readonly class="empty" value="'+$('form input[name=city]').val()+'" type="text"></td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td class="w14">{{ '详细地址' | ctrans }}</td>' +
+                '<td class="w12" colspan="3"><input readonly class="w12 empty" value="'+$('form input[name=address]').val()+'" type="text"></td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td class="w14">{{ '证件号码' | ctrans }}</td>' +
+                '<td class="w12" colspan="3"><input readonly class="w12 empty" value="'+$('form input[name=IDcard]').val()+'" type="text"></td>' +
+                '</tr><tr>' +
+                '<td colspan="4" class="st-title">B.{{ '联络资料' | ctrans }}</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td class="w14">{{ '手机' | ctrans }}</td>' +
+                '<td class="w13"><input readonly class="empty" value="'+$('form input[name=mobile]').val()+'" type="text"></td>' +
+                '<td class="w14">{{ '电子邮箱' | ctrans }}</td>' +
+                '<td class="w13"><input readonly class="empty" value="'+$('form input[name=email]').val()+'" type="text"></td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td colspan="4" class="st-title">C.{{ '账户信息' | ctrans }}</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td class="w14">{{ '账户类型' | ctrans }}</td>' +
+                '<td class="w13"><input readonly class="empty" value="'+usertype+'" type="text"></td>' +
+                '<td class="w14">{{ '杠杆比例' | ctrans }}</td>' +
+                '<td class="w13"><input readonly class="empty" value="'+$('form select[name=lever]').val()+'" type="text"></td>' +
+                '</tr>' +
+                '</table>';
+
+        $('form div.tab').eq(2).find('table.table').eq(0).html(inhtml);
+    }
+    return true;
+}

@@ -1,0 +1,104 @@
+.mian-title{  color: #eb0b0b !important;  font-size: 26px !important; }
+.link p span{  color: #eb0b0b !important;  font-size: 16px !important; }
+  a:hover{ color: #eb0b0b !important;border-bottom-color: #eb0b0b !important;text-decoration: none;}
+.link a:hover, .link a.on {  text-decoration: none;  color: #eb0b0b !important;  border-bottom: 1px solid !important;  }
+.zd-search button {  font-size: 16px  !important;  border: 1px solid #eb0b0b !important;  background-color: #eb0b0b !important; }
+.zd-search input {  border-radius: 10px; color: #a9a9a9  !important; font-size: 16px !important;  }
+.zd-recond input{  font-size: 16px  !important;  border-radius: 10px; }
+.w2,.w1,.w3{ font-size: 16px  !important;  border-radius: 10px !important;  }
+.page div {  font-size: 16px !important;  }
+.table{  border: none !important;  border-top: 1px solid #e6e6e6 !important;  }
+.zd-table .thead td {  color: #3c3c3c !important;  font-size: 18px !important;  }
+.table .search {  border: 1px solid #eb0b0b !important;  color: #fff !important;;  background-color: #eb0b0b !important;  }
+.zd-table {  border:none !important;  }
+.zd-table .thead td {  color: #666 !important;  }
+.page div a {  color: #666 !important;  }
+.main-box .left-box {  border-right: 1px solid  #1a1a1a !important;  background-color: #1a1a1a !important;  }
+.menu li{  border-bottom: 1px solid #1a1a1a !important;background-image:none !important; background-image: url("../../public/ccount/images/123.png") ;background-position-x: 182px;!important; }
+.menu li a {  color: #fff !important;  }
+.menu li a.i1,a.i2,a.i3,a.i4,a.i5,a.i6 {  background-image:none !important;  }
+.menu li.on a, .menu li:hover a {  background-color: #eb0b0b !important;  background-image:none !important; background-image: url("../../public/ccount/images/123.png") !important;background-position-x: 182px;  transition: all 0s !important;  }
+.transfer .button {  background-color: #eb0b0b !important;  }
+input.w8.empty.amount{border-radius: 10px;}
+select[name="currency"]{border-radius: 10px !important; }
+input[name="voucher"]{border-radius: 10px !important;}
+.w12{border-radius: 10px !important;}
+.fr:hover{border-color: #eb0b0b !important;}
+#MTVZ:hover{ border-color: #eb0b0b !important;  }
+.theusername:hover {  border-color: #eb0b0b !important;  }
+.link4 a.detail {  background-color: #eb0b0b !important;  color: #fff !important;  border: 1px solid #eb0b0b !important;  }
+.link4 a.detail:hover{background-color: #eb0b0b !important;}
+.layui-layer-btn .layui-layer-btn0 {  border-color:#eb0b0b !important;  background-color: #eb0b0b !important;  color: #fff !important;  }
+.layui-layer-btn .layui-layer-btn0:hover{ color: #fff !important;}
+.layui-layer-btn1{  border-color:#eb0b0b !important;  background-color: #eb0b0b !important;  color: #fff !important;  }
+.layui-layer-btn1:hover{ color: #fff !important;}
+.topbar .info a:hover { text-decoration: none !important; }
+button.st-btn.tar.sure.next{ color: #fff !important;}
+button#submitno{color: #fff !important; }
+/*资料管理*/
+#mobile,#mobilecode,#email,#address{ border-radius: 10px; }
+.change-pw button { background-color: #eb0b0b !important; border-radius: 30px;}
+.change-pw button:hover { background-color: #eb0b0b !important; }
+.change button {  background-color: #eb0b0b !important;  }
+.change button:hover {  background-color: #eb0b0b !important;  }
+.my .my-cart table button{ border-color: #eb0b0b !important;color: #eb0b0b !important;}
+.my .my-cart table button:hover{  background-color: #eb0b0b !important;color: #fff !important;   }
+/*交易记录*/
+.link2 button {  background-color: #eb0b0b !important; }
+.link2 button:hover{  background-color: #eb0b0b !important;}
+.table .sthead {  font-size:18px !important;  color: #3c3c3c !important;}
+div.mztreeview a.selected{  color: #eb0b0b !important;}
+/*合作伙伴*/
+.back .back1 .fr table button {  background-color: #eb0b0b !important;  border: 1px solid #eb0b0b !important; }
+.back .back1 .fr table button:hover{  background-color: #eb0b0b !important; }
+.back .back2 thead { color: #3c3c3c !important;  font-size:18px !important;}
+.back .back1 .fl {  color: #eb0b0b !important; }
+/*注册出入金注册表单*/
+body>form {background: #fff !important; }
+.st-tabs { margin-bottom: -1px !important;  }
+.st-tabs li {  background-image:none !important;  }
+.st-tabs li.on i {  background-color: #fff !important;  color: #eb0b0b !important;   border-bottom:1px solid #eb0b0b !important; }
+.st-tabs li i {  border:none !important; color: #787878 !important; }
+input[type="file"]::before { line-height:40px !important; background: #eb0b0b !important; border: 1px solid #eb0b0b !important;  }
+input[type="file"]:hover::before{background: #eb0b0b !important;}
+input[type="file"]:active::before{background: #eb0b0b !important;}
+input[type="text"]:hover,input[type="password"]:hover{border-color: #eb0b0b !important;}
+input[type="text"]:focus,input[type="password"]:focus{border-color: #eb0b0b !important;text-indent: 33px;}
+.table .st-btn.btn {  background-color: #eb0b0b !important;  }
+.table .st-btn.btn:hover {   background-color: #eb0b0b !important;  }
+.table .sure {   background-color: #eb0b0b !important;  }
+.table .sure:hover  {   background-color: #eb0b0b !important;  }
+.table input {  font-size: 16px;  height: 40px !important;  font-weight: bold;  text-indent: 33px;  }
+.table .yzm input:hover{border-color: #eb0b0b !important;}
+.table .yzm input:focus{border-color: #eb0b0b !important;}
+select {  border-radius: 10px !important;  }
+select:hover{border-color: #eb0b0b !important;}
+select:focus{border-color: #eb0b0b !important;}
+.table .st-btn:hover{background-color: #eb0b0b !important;}
+.table .st-btn:active{background-color: #eb0b0b !important;}
+#pluginslang .language_div:hover{border: 1px solid  #eb0b0b !important;}
+#pluginslang .language_ul li:hover{border-bottom: 1px solid  #eb0b0b !important;border-top: 1px solid  #eb0b0b !important;}
+span.fl { color: #eb0b0b !important;  }
+.sure{ color: #eb0b0b !important;}
+#r{ color: #eb0b0b !important;}
+select.w3.fl.tradlist{width: 240px !important;}
+select:hover,.back .back1 .fr table select:hover{border-color: #eb0b0b !important;}
+select:focus,.back .back1 .fr table select:focus{border-color: #eb0b0b !important;}
+.tab dl dd .tinfo span.balance {  color: #eb0b0b !important;  }
+#i{ color: #eb0b0b;}
+.tab dl dt .add { border: 1px solid #eb0b0b !important;background-color:  #eb0b0b !important; color: #fff !important;}
+.tab dl dt .add:hover { background-color:  #eb0b0b !important;}
+.tab dl dd .type .cc {  border-color: #eb0b0b !important;color: #eb0b0b !important;  }
+.tab dl dd .type .cc:hover{ border-color: #eb0b0b !important;}
+.tab dl dd:hover .type {  border-color: #eb0b0b !important;  }
+.tab dl dd:hover .type .cc{border-color:#eb0b0b !important;}
+.tab dl dd:hover {border-color: #eb0b0b !important;}
+.tab dl dd .type:hover { border-color: #eb0b0b !important;}
+.recond li i{color: #eb0b0b !important;background-image: url("../../public/images/1.gif") !important;}
+.recond li i.on {  color:#fff !important;background-image: url("../../public/images/1-1.gif") !important; }
+.recond li .info .text h2 {  color: #eb0b0b;  }
+/*代理下交易记录*/
+.link4{ color:#787878 !important;}
+.link4 table tr td {  color: #787878 !important;  }
+#trees{color: #eb0b0b !important;}
+

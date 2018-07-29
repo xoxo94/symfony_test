@@ -1,0 +1,257 @@
+
+
+$(function () {
+    /**
+     * 入金验证模板数据是否为空
+     */
+    $(".goldenbtn").click(function () {
+
+
+        if ($(".outway").val() == "") {
+            layer.alert('{{ '请选择入金方式？' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+            return false
+        }
+
+        if ($(".outway").val() == 1) {
+            if ($(".account").val() == 0) {
+                layer.alert('{{ '请选择账户？' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+                return false
+            }
+
+        }
+
+        if (isNaN($(".amount").val())) {
+            layer.alert('{{ '请输入正确的金额数字！' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+            return false
+        }
+
+        if ($(".amount").val() == "") {
+            layer.alert('{{ '金额不能为空' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+            return false
+        }
+        if ($(".orderno").val() == "") {
+            layer.alert('{{ '凭证不能为空' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+            return false
+        }
+        if ($(".bank").val() == "") {
+            layer.alert('{{ '银行不能为空' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+            return false
+        }
+        if ($(".banksub").val() == "") {
+            layer.alert('{{ '信息不能为空' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+            return false
+        }
+         $('.tab').eq(0).stop().slideUp();
+        $('.tab').eq(1).stop().slideDown();
+        $('.st-tabs li').eq(1).addClass('on').siblings().removeClass('on');
+
+     })
+
+
+    /**
+     * 入金模板出金
+      */
+      $(".outway").click(function () {
+          $(".ficate").siblings().remove()
+            var html='    <tr class="notice">' +
+                '                <td class="st-title" colspan="4">B. {{ '入金信息' | ctrans }}</td>' +
+                '            </tr>' +
+                '' +
+                '            <tr>' +
+                '                <td class="name">{{ '入金金额' | ctrans }}</td>' +
+                '                <td colspan="3">' +
+                '                    <input class="w1 amount" type="text" />' +
+                '                </td>' +
+                '            </tr>' +
+                '            <tr class="notice">' +
+                '                <td class="name">{{ '入金信息' | ctrans }}</td>' +
+                '                <td colspan="3">' +
+                '                    <div class="label fl w1 mr20">' +
+                '                        <input class="w1 orderno" type="text" id="" />' +
+                '                        <label for="male3">{{ '填写付款银行凭证号' | ctrans }}</label>' +
+                '                    </div>' +
+                '                    <div class="label fl w1">' +
+                '                        <input  class="w1 bank" type="text" id="" />' +
+                '                        <label for="male4">{{ '填写付款银行' | ctrans }}</label>' +
+                '                    </div>' +
+                '                </td>' +
+                '            </tr>';
+          $(".tables02").html(html)
+          $(".ficate").css("display","table-row")
+          $(".ficate").before(html);
+
+
+
+      }).trigger("click")
+
+    /**
+     * 出金验证模板数据是否为空
+     */
+
+     $(".outbtn01").click(function () {
+         if ($(".outway").val() == "") {
+             layer.alert('{{ '请选择入金方式？' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+             return false
+         }
+
+         if ($(".outway").val() == 1) {
+             if ($(".account").val() == 0) {
+                 layer.alert('{{ '请选择账户？' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+                 return false
+             }
+
+         }
+
+
+         var payment=$(".payment").val();
+         if (isNaN($(".amount").val())) {
+             layer.alert('{{ '请输入正确的金额数字！' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+             return false
+         }
+         if ($(".amount").val() == "") {
+             layer.alert('{{ '金额不能为空' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+             return false
+         }
+         if(payment==="wire" || payment==="ambank" || payment==="unionpay"){
+             if ($(".bank").val() == "") {
+                 layer.alert('{{ '银行不能为空' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+                 return false
+             }
+             if ($(".banksub").val() == "") {
+                 layer.alert('{{ '账户不能为空' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+                 return false
+             }
+             if ($(".bankcode").val() == "") {
+                 layer.alert('{{ '银行代码不能为空' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+                 return false
+             }
+         }
+         if ($(".bankcard").val() == "") {
+             layer.alert('{{ '账户不能为空' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+             return false
+         }
+
+         if ($(".bankname").val() == "") {
+             layer.alert('{{ '姓名不能为空' | ctrans }}',{btn: ["{{ '确定' | ctrans }}"]})
+             return false
+         }
+
+         $('.tab').eq(0).stop().slideUp();
+         $('.tab').eq(1).stop().slideDown();
+         $('.st-tabs li').eq(1).addClass('on').siblings().removeClass('on');
+
+     })
+
+
+    $(".payment").on("click",function () {
+
+        /**
+         * 银行选择 input变化
+         */
+        var payment=$(".payment").val();
+        var html='' +
+            '                <tr class="notice">' +
+            '                    <td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td>' +
+            '                </tr>' +
+            '                <tr class="notice">' +
+            '                    <td class="name">'+payment+'{{ '账户' | ctrans }}</td>' +
+            '                    <td colspan="3">' +
+            '                        <div class="label fl w1 mr20">' +
+            '                            <input class="w1 bankcard" type="text"  />' +
+            '                            <label for="male">{{ '收款账户的' | ctrans }} '+payment+' {{ '账户号' | ctrans }}</label>' +
+            '                        </div>' +
+            '                        <div class="label fl w1">' +
+            '                            <input class="w1 bankname" type="text" id="" />' +
+            '                            <label for="male2">{{ '收款账户的户名' | ctrans }}</label>' +
+            '                        </div>' +
+            '                    </td>' +
+            '                '
+        var  html1='   <tr class="notice">' +
+            '                    <td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td>' +
+            '                </tr>' +
+            '                <tr class="notice">' +
+            '                    <td class="name">{{ '开户银行' | ctrans }}</td>' +
+            '                    <td colspan="3">' +
+            '                        <div class="label fl w1 mr20">' +
+            '                            <input class="w1 bank" type="text"  />' +
+            '                            <label for="male">{{ '收款账户的开户行' | ctrans }}</label>' +
+            '                        </div>' +
+            '                        <div class="label fl w1">' +
+            '                            <input class="w1 banksub" type="text" id="" />' +
+            '                            <label for="male2">{{ '收款账户的开户行分行' | ctrans }}</label>' +
+            '                        </div>' +
+            '                    </td>' +
+            '                </tr>' +
+            '                <tr class="notice bankcode01" >' +
+            '                    <td class="name">{{ '银行代码' | ctrans }}</td>' +
+            '                    <td colspan="3">' +
+            '                        <div class="label fl w1 mr20" >' +
+            '                            <input class="w1 bankcode" type="text"  />' +
+            '                            <label for="male">{{ '收款银行的 SWIFT CODE' | ctrans }}</label>' +
+            '                        </div>' +
+            '                    </td>' +
+            '                </tr>' +
+            '' +
+            '                <tr class="notice">' +
+            '                    <td class="name">{{ '收款账户' | ctrans }}</td>' +
+            '                    <td colspan="3">' +
+            '                        <div class="label fl w1 mr20">' +
+            '                            <input class="w1 bankcard" type="text" id="" />' +
+            '                            <label for="male3">{{ '收款账户的卡号' | ctrans }}</label>' +
+            '                        </div>' +
+            '                        <div class="label fl w1">' +
+            '                            <input  class="w1 bankname" type="text" id="" />' +
+            '                            <label for="male4">{{ '收款账户的户名' | ctrans }}</label>' +
+            '                        </div>' +
+            '                    </td>' +
+            '                </tr>' +
+            '                ';
+        var  html2='   <tr class="notice">' +
+            '                    <td class="st-title" colspan="4">B. {{ '收款信息' | ctrans }}</td>' +
+            '                </tr>' +
+            '                <tr class="notice">' +
+            '                    <td class="name">{{ '开户银行' | ctrans }}</td>' +
+            '                    <td colspan="3">' +
+            '                        <div class="label fl w1 mr20">' +
+            '                            <input class="w1 bank" type="text"  />' +
+            '                            <label for="male">{{ '收款账户的开户行' | ctrans }}</label>' +
+            '                        </div>' +
+            '                        <div class="label fl w1">' +
+            '                            <input class="w1 banksub" type="text" id="" />' +
+            '                            <label for="male2">{{ '收款账户的开户行分行' | ctrans }}</label>' +
+            '                        </div>' +
+            '                    </td>' +
+            '                </tr>' +
+
+            '                <tr class="notice">' +
+            '                    <td class="name">{{ '收款账户' | ctrans }}</td>' +
+            '                    <td colspan="3">' +
+            '                        <div class="label fl w1 mr20">' +
+            '                            <input class="w1 bankcard" type="text" id="" />' +
+            '                            <label for="male3">{{ '收款账户的卡号' | ctrans }}</label>' +
+            '                        </div>' +
+            '                        <div class="label fl w1">' +
+            '                            <input  class="w1 bankname" type="text" id="" />' +
+            '                            <label for="male4">{{ '收款账户的户名' | ctrans }}</label>' +
+            '                        </div>' +
+            '                    </td>' +
+            '                </tr>' +
+            '                ';
+        if(payment==="wire"){
+            {#$("#outbtn").siblings().remove()#}
+            $(".tables").html(html1);
+
+        }
+        if(payment==="ambank" || payment==="unionpay" ){
+            {#$("#outbtn").siblings().remove()#}
+            $(".tables").html(html2);
+
+        }
+        if(payment==="skrill" || payment==="paypal"  || payment==="neteller"){
+            {#$("#outbtn").siblings().remove()#}
+            $(".tables").html(html)
+        }
+    })
+
+
+});

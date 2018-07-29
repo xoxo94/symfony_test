@@ -1,0 +1,151 @@
+
+/**
+ * 转账交易提示
+ */
+var mt4Records={
+    pagenum:1,
+    pagesize:25,
+    username:'',
+    sort:{},
+    mt4loginxx:function (login) {
+        this.username=login
+    },
+    setOrderby:function (m,key) {
+        var  m=$(m);
+        var oldkeyval=this.sort[key];
+        this.sort={};
+        m.siblings().find('span.orderby').text('');
+        if(oldkeyval=='ASC'){
+            this.sort[key]='DESC';m.find('span.orderby').text('↓');
+        }else{
+            this.sort[key]='ASC';m.find('span.orderby').text('↑');
+        }
+        this.lowerRecords();
+    },
+    generate:function () {
+        var username='';
+        if(this.username!='' && this.username!=undefined){
+            username=this.username;
+        }
+        var symbol =$("select[name='symbol']").val();
+        if(symbol==0){
+            symbol=$('#symbolxx').val();
+        }
+        var query=$('#loginkey').val();
+        var startOpentime=$('#startOpentime').val();
+        var endOpentime=$('#endOpentime').val();
+        var startClosetime=$('#startClosetime').val();
+        var endClosetime=$('#endClosetime').val();
+        var url='/user/lower/records/form';
+        url+='?mt4login='+this.mt4login+'&startOpentime='+startOpentime+'&endOpentime='+endOpentime+'&startClosetime='+startClosetime+'&endClosetime='+endClosetime+'&sort='+this.sort+'&username='+username+'&symbol='+symbol
+        window.open(url)
+
+    },
+    page:function (page) {
+        this.pagenum=parseInt(page);
+        this.lowerRecords();
+    },
+    search:function () {
+        this.pagenum=1;
+        this.lowerRecords();
+    },
+    lowerRecords:function(e){
+        var username='';
+        if(this.username!='' && this.username!=undefined){
+            username=this.username;
+        }
+         var symbol =parseInt($("select[name='symbol']").val());
+              if(symbol==0){
+                 symbol=$('#symbolxx').val();
+              }
+        var startOpentime=$('#startOpentime').val();
+        var endOpentime=$('#endOpentime').val();
+        var startClosetime=$('#startClosetime').val();
+        var endClosetime=$('#endClosetime').val();
+        var index = layer.load(0,{shade: [0.3,'#000']});
+        var query=$('#loginkey').val();
+        var thead02=$("#recordsdata");
+        var srt="";
+        var   startprofit=$('#startprofit').val();
+        var   endprofit=$('#endprofit').val();
+
+        var  querc={username:username,pagenum:this.pagenum,query:query,startOpentime:startOpentime,
+                endOpentime:endOpentime,startClosetime:startClosetime,endClosetime:endClosetime,
+                orderby:this.sort,startprofit:startprofit,endprofit:endprofit,symbol:symbol}
+        $.ajax({
+            url: "/user/lower/records",
+            type:"get",
+            dataType:"json",
+            data:querc,
+            success: function(obj){
+                layer.close(index);
+                if(obj.code==false){
+                    layer.alert(obj.msg,{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]});
+					$("#summrrydata li").eq(0).find('span').eq(0).html('0');
+					$("#summrrydata li").eq(1).find('span').eq(1).html('0');
+					$("#summrrydata li").eq(2).find('span').eq(1).html('0');
+					$("#summrrydata li").eq(3).find('span').eq(1).html('0');
+					srt+= "<tr style='border: 1px silver solid'><td colspan='14' style='text-align: center'>{{ '暂无数据' | ctrans }}</td></tr>"
+                    thead02.html(srt)
+                }else {
+                    if (obj.data.plant.length == 0) {
+						$("#summrrydata li").eq(0).find('span').eq(0).html('0');
+						$("#summrrydata li").eq(1).find('span').eq(1).html('0');
+						$("#summrrydata li").eq(2).find('span').eq(1).html('0');
+						$("#summrrydata li").eq(3).find('span').eq(1).html('0');
+                        srt+= "<tr style='border: 1px silver solid'><td colspan='14' style='text-align: center'>{{ '暂无数据' | ctrans }}</td></tr>"
+                        thead02.html(srt)
+                        return false;
+                    }
+                     var cmdsrt='';
+                    var profit=0.00;
+                    $(obj.data.plant).each(function(k,v){
+                          if(v.cmd==1){cmdsrt='sell';}else {cmdsrt='buy';}
+                        if(typeof(v.profit)!=='undefined'){profit=v.profit}
+
+                        srt+='<tr class="thead">\n' +
+
+                            '                    <td>'+v.login+'</td>\n' +
+                            '                    <td>'+v.userInfo+'</td>\n' +
+                            '                    <td>'+v.agentInfo+'</td>\n' +
+                            '                    <td>'+v.orderid+'</td>\n' +
+                            '                    <td>'+(cmdsrt=="sell"?"<b style='font-weight: bold;color: #D82424;'>"+cmdsrt+"</b>":"<b style='font-weight: bold;color: #5ac3e1;'>"+cmdsrt+"</b>")+'/<span style="color:#5ac3e1;">'+v.symbol+'</span></td>\n' +
+                            '                    <td>'+(v.volume*0.01).toFixed(2)+'{{ '手' | ctrans }}'+'</td>\n' +
+                            '                    <td><b style="color:#787476;"> '+v.openPrice+'</b> <br><span style="color:#0f000b;">'+v.openTime+'</span></td>\n' +
+                            '                    <td><b style="color:#db524e"> '+v.closePrice+'</b> <br><span style="color:#0f000b;">'+v.closeTime+'</span></td>\n' +
+                            '                    <td>'+v.stopLoss+'|'+v.takeProfit+'</td>\n' +
+                            '                    <td>'+(profit>0?"<span style='color:#228A19;'>$"+profit+"<span>":"<span style='color:#D82424;'>$"+profit+"<span>")+'</td>\n' +
+                            '                    <td>$'+v.commission+'</td>\n' +
+                            '                    <td>$'+v.storage+'</td>\n' +
+                            '                    <td>$'+(isNaN(v.totalRebate)?0:parseFloat(v.totalRebate).toFixed(2))+'</td>\n' +
+
+                            '                </tr>';
+
+                        profit=0;
+                    })
+                    thead02.html(srt)
+                    //分页
+                    var Previouspage = parseInt(obj.data.page.previousPage);
+                     var nextpage= parseInt(obj.data.page.nextPage);
+                    $("#volume").text(parseFloat(obj.data.totalVolume*0.01).toFixed(2));
+                    var totalProfit=parseFloat(obj.data.totalProfit);
+                    $("#profit").text(totalProfit.toFixed(2));
+
+                    $("#Commission").text(parseFloat(obj.data.totalCommission).toFixed(2));
+                    $("#storehouse").text(parseFloat(obj.data.totalStorage).toFixed(2));
+                    $('.Previouspage1').html(' <a href="javascript:void(0);" class="Previouspage " onclick="mt4Records.page('+Previouspage+');">{{ '上一页' | ctrans }}</a>');
+                    $('.nextpage2').html('<a href="javascript:void(0);" class="nextpage " onclick="mt4Records.page('+nextpage+');">{{ '下一页' | ctrans }}</a>');
+                }
+            },
+            error:function () {
+                layer.close(index);
+                layer.alert("{{ '请求错误' | ctrans }}",{title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]});
+				$("#volume").html('0');
+                    $("#profit").html('0');
+                    $("#Commission").html('0');
+                    $("#storehouse").html('0');
+            }
+        });
+
+    }
+}

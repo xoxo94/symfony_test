@@ -1,0 +1,61 @@
+/**
+ * 交易记录
+ */
+function seeCardOrdernoRecords(m) {
+    var index = layer.load(0, {shade: [0.3,'#000']}); //0代表加载的风格，支持0-2
+    var CardList=$("#CardList").val();
+    var starttime= $("#starttime").val();
+    var page=$(m).attr('page');
+    var endtime=$("#endtime").val();
+    var str="";
+    $.ajax({
+        url: "/user/record",
+        type:"get",
+        dataType:"json",
+        data:"CardList="+CardList+"&starttime="+starttime+"&endtime="+endtime+"&page="+page,
+        success: function(obj){
+            layer.close(index);
+            if(obj.code==false){
+                layer.alert(obj.msg,{ title:"{{ '信息' | ctrans }}",btn: ["{{ '确定' | ctrans }}"]})
+            }else {
+                $(".sthead").siblings().remove();
+                if (obj.data.data.length == 0) {
+                    $("#record").children().append("<tr style='border: 1px silver solid'><td colspan='10' style='text-align: center'>{{ '暂无数据' | ctrans }}</td></tr>")
+                  return false;
+                }
+
+                $(obj.data.data).each(function(k,v){
+                    str+="<tr style='border: 1px silver solid'><td style='text-align: center'>"+v.orderid+"</td><td>"+v.symbol+"</td><td>"+(v.cmd=="sell"?"<b style='font-weight: bold;color: #D82424;'>"+v.cmd+"</b>":"<b style='font-weight: bold;color: #06F;'>"+v.cmd+"</b>")+"</td><td>"+v.volume+"</td>" +
+                        "<td>"+v.openTime+"</td><td>"+v.openPrice+"</td><td>"+v.closeTime+"</td><td>"+v.closePrice+"</td>" +
+                        "<td>"+(v.profit>0?"<span style='color:#228A19;'>"+v.profit+"<span>":"<span style='color:#D82424;'>"+v.profit+"<span>")+"</td><td>"+v.commission+"</td></tr>";
+                });
+                //分页
+                var  nextpage;
+                if (obj.data.thisPageNumber >= obj.data.totalPageNumber) {
+                    nextpage=obj.data.totalPageNumber;
+
+                }else {
+                    nextpage=parseInt(obj.data.thisPageNumber)+1;
+
+                }
+                var  Previouspage;
+                if (obj.data.thisPageNumber <= 1) {
+                    Previouspage=obj.data.thisPageNumber;
+
+                }else{
+                    Previouspage=parseInt(obj.data.thisPageNumber)-1;
+
+                }
+                $(".Previouspage").attr('page',Previouspage);
+
+                $(".nextpage").attr('page',nextpage);
+
+                $("#record").children().append(str);
+            }
+        },
+        error:function (obj) {
+                   layer.alert("{{ '网络错误' | ctrans }}",{title:"{{ '信息' | ctrans }}", btn: ["{{ '确定' | ctrans }}"]});
+            layer.close(index);
+        }
+    });
+}

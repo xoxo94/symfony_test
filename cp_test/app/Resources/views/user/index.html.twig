@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ '登录' | ctrans }}</title>
+    <link rel="stylesheet" href="{{ asset('public/css/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/ccount/css/layer.css') }}">
+    {% if data.WEB.website_style_login is defined  and data.WEB.website_style_login !=[] %}
+        <link rel="stylesheet"  type="text/css"  href="{{ data.WEB.website_style_login}}">
+    {% endif %}
+    <script src="{{ asset('public/ccount/js/jquery-1.11.1.min.js') }}"></script>
+    <script src="{{ asset('public/ccount/js/layer.js') }}"></script>
+    <script src="{{ asset('public/js/login.js') }}"></script>
+</head>
+<body>
+    <div class="login">
+        <div class="topbar2">
+            <a href="#" class="logo"><img src="{% if data.WEB.website_notlogin_logo is defined  and data.WEB.system_webadmin_url  is defined and data.WEB.website_notlogin_logo!=[] %}{{ data.WEB.website_notlogin_logo }}{% else %}{{ asset('public/images/logom.png') }}{% endif %}" alt=""></a>
+            <a href="/" class="home"><img src="{{ asset('public/images/home.gif') }}" alt=""></a>
+                <div class="select" id="pluginslang">
+                    <script type="text/javascript" src="{{ asset('/js/lang.js') }}"></script>
+                </div>
+        </div>
+        {#登录页面#}
+        <form class="am-form" method="post" action="{{ asset('member/login') }}" id="loginform">
+            <table class="from-login" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td>{{ '用户名' | ctrans }}</td>
+                    <td>{{ '密码' | ctrans }}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="username">
+                            <input id="username" name="username" type="text"  value="{{ data.userInfo.username }}" placeholder="{{ '请输入电子邮件或者用户名' | ctrans }}">
+                            <i></i>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="password">
+                            <input id="password" name="password" type="password" value="{{ data.userInfo.password }}" placeholder="{{ '请输入密码' | ctrans }}">
+                            <i></i>
+                            <b></b>
+                        </div>
+                    </td>
+                </tr>
+                <td>
+                    <div class="vcode">
+                        <input type="text" name="vcode" class="" id="doc-ipt-captcha-1" placeholder="{{ '请输入验证码' | ctrans }}" >
+                    </div>
+                </td>
+                <td>
+                    <div class="img">
+                        <img id="vcode" height="43" src="{{ asset('/captcha/getCaptcha') }}" onclick="this.src='/captcha/getCaptcha?cc='+Math.random();" >
+                    </div>
+                {% if msg is defined  %}
+                <div class="am-form-group login-font">
+                    <i> {{ msg }}</i>
+                </div>
+                {% endif %}
+                </td>
+                <input type="hidden" name="format" value="html" />
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <button class="btn-login" type="submit">{{ '登录' | ctrans }}</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center">
+                        <a href="{{ asset('/form/register_real') }}"><button class="btn-register" type="button">{{ '注册' | ctrans }}</button></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;cursor:default " >
+                        <a class="forget">{{ '忘记密码' | ctrans }}</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+
+{#找回密码页面#}
+        <form class="am-form" method="get" action="{{ asset('/user/send/email') }}"  onsubmit="submitEmail(this);return false" style="display: none" id="forgetform">
+            <table class="from-login forgettable" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td colspan="2">{{ '用户名 / 电子邮件' | ctrans }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="username">
+                            <input id="email" name="email" type="text" placeholder="{{ '请输入电子邮件' | ctrans }}">
+                            <i></i>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="vcode_input">
+                            <input type="text" name="captcha"  id="doc-ipt-captcha" placeholder="{{ '请输入验证码' | ctrans }}" >
+						</div>
+					</td>
+					<td>
+						<div class="vcode_img">
+                            <img height="43" src="{{ asset('/captcha/getCaptcha') }}" onclick="this.src='/captcha/getCaptcha?cc='+Math.random();" >
+                        </div>
+                    </td>
+                </tr>
+                <input type="hidden" name="format" value="html" />
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <button class="btn-login" type="submit">{{ '找回密码' | ctrans }}</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center ;cursor:default">
+                        <a class="enter" >{{ '登录' | ctrans }}</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <div style="margin: 10% auto;text-align: center;color: #b1b0b0;"><span>如果出现异常<p>建议使用推荐浏览器Chrome浏览本站</p></span></div>
+    </div>
+</body>
+
+
+</html>

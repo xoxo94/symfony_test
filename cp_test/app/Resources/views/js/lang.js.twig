@@ -1,0 +1,20 @@
+var langhtml='<div style="cursor:pointer;"; class="option english language_div {% if lang=='cn' %}simple">简体中文{% endif %}{% if lang=='hk' %}complex">繁体中文{% endif %}{% if lang=='en' %}english">English{% endif %}{% if lang=='kr' %}korean">&#54620;&#44397;&#50612;{% endif %}</div>' +
+    '<ul class="language_ul" style="display: none; cursor:pointer;">' +
+    '<li alt="/lang/setting?lang=cn" class="simple">简体中文</li>' +
+    '<li alt="/lang/setting?lang=hk" class="complex">繁体中文</li>' +
+    '<li alt="/lang/setting?lang=en" class="english">English</li>' +
+    '<li alt="/lang/setting?lang=kr" class="korean">&#54620;&#44397;&#50612;</li>' +
+    '</ul>';
+var onshowlang=function(){document.getElementById('pluginslang').innerHTML=langhtml;
+    $('.select .option').click(function () {
+        $(this).siblings('ul').slideToggle("fast");
+    });
+    $('.select li').click(function () {
+        $('.select .option').addClass($(this).attr('class')).removeClass($(this).siblings().attr('class')).html($(this).html());
+        $('.select ul').slideToggle("fast");
+        $.ajax({url:$(this).attr('alt'),dataType:'json',async:false,success:function(data){
+            if(data.code==200){history.go(0);}else{alert(data.message);}
+        }});
+    });
+}
+if(window.attachEvent){window.attachEvent("onload",onshowlang);}else{window.addEventListener("load",onshowlang,true);}
