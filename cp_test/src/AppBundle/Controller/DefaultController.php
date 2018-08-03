@@ -20,7 +20,7 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-       var_dump(345343);exit();
+        return $this->render('user/Alipay.html.twig');
     }
 
     
